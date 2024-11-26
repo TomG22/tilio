@@ -19,8 +19,10 @@ mongoose.connect('mongodb://localhost:27017/mernstack', {
 
 // Basic Route
 app.get('/', (req, res) => {
-    res.send('Hello, MERN Stack!');
 });
+
+// Express Staiic route for client
+app.use(expres.static('public_html'));
 
 // Start the server
 app.listen(PORT, () => {
