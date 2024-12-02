@@ -1,23 +1,104 @@
-import logo from './logo.svg';
 import './App.css';
+import React, {useState, useRef, useEffect} from 'react';
+
+function Header({children}) {
+  return <div className="Header">{children}</div>;
+}
+
+function Button({className, children}) {
+  //const [count, setCount] = useState(0);
+  return (
+    <div className="ButtonContainer">
+      <button className={`Button ${className}`}>{children}</button>
+    </div>
+  );
+}
+
+function Board() {
+  return (
+    <div className="Board">
+      <Tile value="2" data-row="0" data-col="1"/>
+      <Tile value="2" data-row="0" data-col="2"/>
+      <Tile value="10" data-row="0" data-col="3"/>
+      <Tile value="100" data-row="0" data-col="4"/>
+      <Tile value="2000" data-row="1" data-col="1"/>
+      <Tile value="10000" data-row="1" data-col="2"/>
+      <Tile value="100000" data-row="1" data-col="3"/>
+      <Tile value="1000000" data-row="1" data-col="4"/>
+      <Tile value="10000000" data-row="2" data-col="1"/>
+      <Tile value="100000000" data-row="2" data-col="2"/>
+      <Tile value="2" data-row="2" data-col="3"/>
+      <Tile value="2" data-row="2" data-col="4"/>
+      <Tile value="2" data-row="3" data-col="1"/>
+      <Tile value="2" data-row="3" data-col="2"/>
+      <Tile value="2" data-row="3" data-col="3"/>
+      <Tile value="2" data-row="3" data-col="4"/>
+    </div>
+  )
+}
+
+function Tile({ value }) {
+  const selfRef = useRef(null);
+  const [textSize, setTextSize] = useState(0);
+
+  useEffect(() => {
+    const rescaleText = () => {
+      if (selfRef.current && value.length !== 1) {
+        // Rescaling the text so larger values appear smaller
+        setTextSize(`${(selfRef.current.clientWidth + 20) / selfRef.current.textContent.length}px`);
+      } else if (selfRef.current && value.length === 1) {
+        setTextSize(`${(selfRef.current.clientWidth + 20) / 2}px`);
+      }
+    };
+
+    rescaleText();
+
+    // Add event listener for window resize
+    window.addEventListener('resize', rescaleText);
+
+    return () => {
+      // Cleanup the listener when the object is unmounted
+      window.removeEventListener('resize', rescaleText);
+    };
+  }, [value]);
+
+  return <button ref={selfRef} className="Tile" style={{ fontSize: textSize }}>{value}</button>;
+}
+
+function Leaderboard({name}) {
+  return (
+    <div className="Leaderboard">
+      {name}
+      <Score username="Player" score="9999" />
+      <Score username="Player" score="9999" />
+      <Score username="Player" score="9999" />
+      <Score username="Player" score="9999" />
+      <Score username="Player" score="9999" />
+    </div>
+  );
+}
+
+function Score({username, score}) {
+  return (
+  <div className="Score">
+    <div className="UsernameLabel">
+      {username}
+    </div>
+    <div className="ScoreLabel">
+      {score}
+    </div>
+  </div>
+  );
+}
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header>Header</Header>
+      <Board />
+      <Button className="Username">Username</Button>
+      <Button className="Play">Play</Button>
+      <Leaderboard name="Leaderboard Name"/>
     </div>
   );
 }

@@ -1,11 +1,132 @@
+:root {
+  --pri-color: #8d91d9;
+  --sec-color: #5c60ab;
+  --text-color: White;
+  --bg-color: #cc7c68;
+}
+
+div, button {
+  color: var(--text-color);
+  border: none;
+  font-size: 24pt;
+}
+
 .App {
+  background-color: var(--bg-color);
+  position: fixed;
+  width: 100%;
+  height: 100%;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.ButtonContainer {
+  position: fixed;
 }
+
+.Button {
+  position: fixed;
+  background-color: var(--pri-color);
+  font-size: 22pt;
+}
+
+.Username {
+  background-color: var(--sec-color);
+  right: 0%;
+  margin: 0% 0% 0% 0%;
+  width: 15vw;
+  height: 6vh;
+}
+
+.Play {
+  margin: 78vh 0 0 50vw;
+  transform: translate(-50%, -50%);
+  width: 20vw;
+  height: 10vh;
+  font-size: 30pt;
+}
+
+#UsernameFieldLabel {
+  margin: 50vh 0 0 50vw;
+  width: 20vw;
+  height: 10vh;
+  font-size: 25pt;
+}
+
+#UsernameField {
+  margin: 50vh 0 0 50vw;
+  width: 20vw;
+  height: 10vh;
+  font-size: 25pt;
+}
+
+.Header {
+  position: fixed;
+  width: 100%;
+  height: 60pt;
+  text-align: left;
+  padding: 1vh 0 0 2vw;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), #00000000);
+  font-size: 28pt;
+}
+
+.Board {
+  position: fixed;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  width: 60vh;
+  height: 60vh;
+  margin: 50vh 0 0 50vw;
+  transform: translate(-50%, -50%);
+  min-width: 300px;
+  min-height: 300px;
+  border-radius: 2%;
+  background-color: var(--sec-color);
+  box-sizing: border-box;
+  padding: .5%;
+}
+
+.Tile {
+  line-height: 20pt;
+  border-radius: 10%;
+  font-family: Monospace;
+  font-weight: bold;
+  margin: 5%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background-color: var(--pri-color);
+  border: none;
+}
+
+.Leaderboard {
+  position: fixed;
+  width: 20vw;
+  margin: 50vh 0 0 50vw;
+  transform: translate(-50%, -50%);
+  background-color: var(--sec-color);
+}
+
+.Score {
+  margin: 2%;
+  display: flex;
+  width: 96%;
+  height: 40pt;
+  background-color: var(--pri-color);
+  line-height: 40pt;
+}
+
+.UsernameLabel {
+  width: 50%;
+  height: 100%;
+}
+
+.ScoreLabel {
+  float: right;
+  width: 50%;
+  height: 100%;
+}
+
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
@@ -13,22 +134,17 @@
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
 @keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+@keyframes Tile-spin {
   from {
     transform: rotate(0deg);
   }
