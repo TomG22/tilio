@@ -52,10 +52,12 @@ app.get('/leaderboardTime', async (req, res) => {
 app.post('/updateScore/:name/:score/:time', async (req, res) => {
    try {
     const newEntry = new Leaderboard ({
-      name: req.params[0],
+      name:  req.params[0],
       score: req.params[1],
-      time: req.params[2]
-    })
+      time:  req.params[2]
+    });
+    await newEntry.save();
+
   } catch (error) {
     res.status(500);
   }
