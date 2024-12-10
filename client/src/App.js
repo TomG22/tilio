@@ -65,9 +65,9 @@ function Tile({ value }) {
   return <button ref={selfRef} className="Tile" style={{ fontSize: textSize }}>{value}</button>;
 }
 
-function Leaderboard({name}) {
+function Leaderboard({name, id}) {
   return (
-    <div className="Leaderboard">
+    <div className="Leaderboard" id={id}>
       {name}
       <Score username="Player" score="9999" />
       <Score username="Player" score="9999" />
@@ -98,7 +98,9 @@ function App() {
       <Board />
       <Button className="Username">Username</Button>
       <Button className="Play">Play</Button>
-      <Leaderboard name="Leaderboard Name"/>
+      <Leaderboard name="High Score" id="scoresLB"/>
+      <Leaderboard name="Fastest 2048" id="timesLB"/>
+      <Leaderboard name="Live Leaderboard" id="liveLB"/>
     </div>
   );
 }

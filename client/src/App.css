@@ -102,9 +102,25 @@ div, button {
 .Leaderboard {
   position: fixed;
   width: 20vw;
-  margin: 50vh 0 0 50vw;
-  transform: translate(-50%, -50%);
+  top: 20vh;
+  min-width: 200px;
   background-color: var(--sec-color);
+}
+
+#scoresLB {
+  right: 50vw;
+  margin-right: 5vw;
+}
+
+#timesLB {
+  left: 50vw;
+  margin-left: 5vw;
+}
+
+#liveLB {
+  left: 60vh;
+  margin-left: 50vw;
+  transform: translate(-50%, 0%)
 }
 
 .Score {
