@@ -9,7 +9,9 @@ class Tile {
      this.value = value;
    }
 
-   function merge(otherTile) {
-     return new Tile(this.value + otherTile);
+   static merge(aTile, bTile) {
+     if(aTile.value != 0 && aTile.value == bTile.value)
+      return new Tile(aTile.value + bTile.value);
+     return 0;
    }
 }
