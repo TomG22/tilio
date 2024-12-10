@@ -127,7 +127,7 @@ class Board {
     }
   }
 
-  fillRandom() {
+  #fillRandom() {
     const min = 0;
     const max = 3;
 
@@ -150,7 +150,6 @@ class Board {
 
     tiles[row][col] = new Tile(tileVal);
   }
-
-
-
 }
+
+export default Board;
