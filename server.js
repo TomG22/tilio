@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const path = require('path');
 const cors = require('cors');
 
 const app = express();
@@ -48,8 +49,12 @@ const GameStatic = mongoose.model('GameStaic', gameSchema);
 
 const GameLive = mongoose.model('GameLive', gameSchema);
 
-app.use(express.static('public_html'));
+app.use(express.static(path.join(__dirname, 'client/public')));
 
+// Handle any requests that don't match static files
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client/public', 'index.html'));
+});
 app.use(express.json());
 
 app.get("/leaderboard/static", async (req, res) => {
