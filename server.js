@@ -49,11 +49,11 @@ const GameStatic = mongoose.model('GameStaic', gameSchema);
 
 const GameLive = mongoose.model('GameLive', gameSchema);
 
-app.use(express.static(path.join(__dirname, 'client/public')));
+app.use(express.static(path.join(__dirname, 'client/build')));
 
 // Handle any requests that don't match static files
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client/public', 'index.html'));
+    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
 });
 app.use(express.json());
 
