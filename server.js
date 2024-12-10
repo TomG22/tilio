@@ -74,6 +74,17 @@ app.post("/leaderboard/live/update", async (req, res) => {
       { new: true, upstart true }
     );
 
+    if (winTime != 0) {
+      await GameStaic.findOneAndUpdate(
+        { username },
+        { score, updatedAt: Date.now() },
+        { endTime, updatedAt: Date.now() },
+        { winTime, updatedAt: Date.now() },
+        { board, updatedAt: Date.now() },
+        { new: true, upstart true }
+      );
+    }
+
     res.status(200).json({
       message: 'Leaderboard updated successfully.',
       data: result
