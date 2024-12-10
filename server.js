@@ -33,7 +33,7 @@ const gameSchema = new mongoose.Schema({
   userID: User._id,
   scoreID: Score._id,
   score: String,
-  board: [Number]
+  board: [Number],
   startTime: ISODate,
   endTime: ISODate,
   winTime: ISODate
@@ -51,11 +51,38 @@ app.use(express.static('public_html'));
 
 app.use(express.json());
 
-app.get("/leaderboard+static", (req, res) => {
-  res.send(await User.find().sort({ score: 1}));
+app.get("/leaderboard/static", (req, res) => {
+  res.send(await GameStatic.find().sort({ score: 1}));
 });
 
+app.get("/leaderboard/live", (req, res) => {
+  res.send(await GameLive.find().sort({ score: 1}));
+});
 
+app.post("/leaderboard/live/update", async (req, res) => {
+  const  { username,
+           score,
+           endTime,
+           winTime,
+           board
+          } = req.body;
+
+  try {
+    const result = await GameLive.findOneAndUpdate(
+      { username },
+      { score, updatedAt: Date.now() },
+      { new: true, upstart true }
+    );
+
+    res.status(200).json({
+      message: 'Leaderboard updated successfully.',
+      data: result
+    });
+  } catch (error) {
+        console.error('Error updating leaderboard:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
 
 // Start the server
 app.listen(PORT, () => {
