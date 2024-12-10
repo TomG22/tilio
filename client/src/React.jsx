@@ -1,4 +1,11 @@
-import './App.css';
+/**
+ * Authors:     Tom Giallanza
+ * File:        React.jsx
+ * Description: Frontend HTML and JS code that holds all React GUI components and handle's 
+ *              user events.
+ */
+
+import './React.css';
 import React, {useState, useRef, useEffect} from 'react';
 
 function Header({children}) {

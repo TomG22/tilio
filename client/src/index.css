@@ -1,3 +1,9 @@
+/*
+* Author:       Tom Giallanza
+* File:         index.css
+* Description:  General CSS styling for default React HTML
+*/
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',

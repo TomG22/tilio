@@ -1,3 +1,10 @@
+/**
+ * Authors:     Edward Fattell
+ * File:        Board.js
+ * Description: Represents the 2048 gameboard. Game "backend"/functionality
+ */
+
+
 class Board {
   let tiles;
   constructor() {
