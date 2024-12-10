@@ -17,10 +17,15 @@ mongoose.connect('mongodb://localhost:27017/mernstack', {
 .then(() => console.log('MongoDB connected'))
 .catch(err => console.log(err));
 
-// Basic Route
-app.get('/', (req, res) => {
-    res.send('Hello, MERN Stack!');
+app.use(express.static('public_html'));
+
+app.use(express.json());
+
+app.get("/leaderboard+static", (req, res) => {
+  res.send();
 });
+
+
 
 // Start the server
 app.listen(PORT, () => {
