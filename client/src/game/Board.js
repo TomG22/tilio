@@ -19,7 +19,6 @@ class Board {
     let hasMerges = true;
 
     let merged;
-    while (hasMerges) {
       for (let row = 3; row > 0; row--) {
         for (let col = 0; col < 4; col++) {
           let a = Tiles[row][col];
@@ -36,7 +35,6 @@ class Board {
           }
         }
       }
-    }
     if(merged.length > 0) {
       fillRandom();
     }
@@ -46,7 +44,6 @@ class Board {
     let hasMerges = true;
 
     let merged;
-    while (hasMerges) {
       for (let row = 0; row < 3; row++) {
         for (let col = 0; col < 4; col++) {
           let a = Tiles[row][col];
@@ -63,7 +60,6 @@ class Board {
           }
         }
       }
-    }
     if(merged.length > 0) {
       fillRandom();
     }
@@ -75,7 +71,6 @@ class Board {
     let hasMerges = true;
 
     let merged;
-    while (hasMerges) {
       for (let col = 4; col > 0; col--) {
         for (let row = 0; row < 3; row++) {
           let a = Tiles[row][col];
@@ -92,7 +87,6 @@ class Board {
           }
         }
       }
-    }
     if(merged.length > 0) {
       fillRandom();
     }
@@ -104,7 +98,6 @@ class Board {
     let hasMerges = true;
 
     let merged;
-    while (hasMerges) {
       for (let col = 0; col < 3; col+) {
         for (let row = 0; row < 3; row++) {
           let a = Tiles[row][col];
@@ -121,7 +114,6 @@ class Board {
           }
         }
       }
-    }
     if(merged.length > 0) {
       fillRandom();
     }

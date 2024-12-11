@@ -60,7 +60,7 @@ app.use(express.json());
 app.get("/leaderboard/static", async (req, res) => {
   try {
     const leaderboard = await GameStatic.find().sort({ score: 1});
-    res.send(leaderboard);
+    res.json(leaderboard);
   } catch (error){
 
   }
@@ -69,7 +69,7 @@ app.get("/leaderboard/static", async (req, res) => {
 app.get("/leaderboard/live", async (req, res) => {
   try {
     const leaderboard = await GameLive.find().sort({ score: 1});
-    res.send(leaderboard);
+    res.json(leaderboard);
   } catch (error){
 
   }
