@@ -8,6 +8,7 @@
 
 class Board {
   constructor() {
+    this.won = false;
     for (let row = 0; row < 4; row++) {
       this.tiles[row] = [];
       for (let col = 0; col < 4; col++) {
@@ -22,16 +23,19 @@ class Board {
     let merged;
       for (let row = 3; row > 0; row--) {
         for (let col = 0; col < 4; col++) {
-          let a = Tiles[row][col];
-          let b = Tiles[row-1][col];
+          let a = this.tiles[row][col];
+          let b = this.tiles[row-1][col];
           let mergedTile = Tile.merge(a, b);
           if(mergedTile != 0 && !merged.includes(a) && !merged.includes(b){
-            tiles[row][col] = new Tile();
-            tiles[row - 1][col] = mergedTile;
+            this.tiles[row][col] = new Tile();
+            this.tiles[row - 1][col] = mergedTile;
             merged.push(mergedTile);
+            if(merged.value == 2048) {
+             this.won = true;
+            }
           } else if (b.value == 0) {
             for (let rowMove = row; rowMove < 4; rowMove++) {
-              tiles[rowMove - 1][col] = tile[rowMove][col];
+              this.tiles[rowMove - 1][col] = tile[rowMove][col];
             }
           }
         }
@@ -47,16 +51,20 @@ class Board {
     let merged;
       for (let row = 0; row < 3; row++) {
         for (let col = 0; col < 4; col++) {
-          let a = Tiles[row][col];
-          let b = Tiles[row+1][col];
+          let a = this.tiles[row][col];
+          let b = this.tiles[row+1][col];
           let mergedTile = Tile.merge(a, b);
           if(mergedTile != 0 && !merged.includes(a) && !merged.includes(b){
-            tiles[row][col] = new Tile();
-            tiles[row + 1][col] = mergedTile;
+            this.tiles[row][col] = new Tile();
+            this.tiles[row + 1][col] = mergedTile;
             merged.push(mergedTile);
+
+            if(merged.value == 2048) {
+             this.won = true;
+            }
           } else if (b.value == 0) {
             for (let rowMove = row; rowMove >= 0; rowMove--) {
-              tiles[rowMove + 1][col] = tile[rowMove][col];
+              this.tiles[rowMove + 1][col] = tile[rowMove][col];
             }
           }
         }
@@ -74,16 +82,20 @@ class Board {
     let merged;
       for (let col = 4; col > 0; col--) {
         for (let row = 0; row < 4; row++) {
-          let a = Tiles[row][col];
-          let b = Tiles[row][col-1];
+          let a = this.tiles[row][col];
+          let b = this.tiles[row][col-1];
           let mergedTile = Tile.merge(a, b);
           if(mergedTile != 0 && !merged.includes(a) && !merged.includes(b)){
-            tiles[row][col] = new Tile();
-            tiles[row][col - 1] = mergedTile;
+            this.tiles[row][col] = new Tile();
+            this.tiles[row][col - 1] = mergedTile;
             merged.push(mergedTile);
+
+            if(merged.value == 2048) {
+             this.won = true;
+            }
           } else if (b.value == 0) {
             for (let colMove = col; colMove >= 0; colMove++) {
-              tiles[row][colMove + 1] = tile[row][colMove];
+              this.tiles[row][colMove + 1] = tile[row][colMove];
             }
           }
         }
@@ -101,16 +113,20 @@ class Board {
     let merged;
       for (let col = 0; col < 3; col++) {
         for (let row = 0; row < 4; row++) {
-          let a = Tiles[row][col];
-          let b = Tiles[row][col+1];
+          let a = this.tiles[row][col];
+          let b = this.tiles[row][col+1];
           let mergedTile = Tile.merge(a, b);
           if(mergedTile != 0 && !merged.includes(a) && !merged.includes(b)){
-            tiles[row][col] = new Tile();
-            tiles[row][col + 1] = mergedTile;
+            this.tiles[row][col] = new Tile();
+            this.tiles[row][col + 1] = mergedTile;
             merged.push(mergedTile);
+
+            if(merged.value == 2048) {
+             this.won = true;
+            }
           } else if (b.value == 0) {
             for (let colMove = col; colMove >= 0; colMove--) {
-              tiles[row][colMove - 1] = tile[row][colMove];
+              this.tiles[row][colMove - 1] = tile[row][colMove];
             }
           }
         }
@@ -120,22 +136,49 @@ class Board {
     }
   }
 
-  gameOver() {
-    if(!isFull) {
-      for (let row : tiles) {
-        for (let aTile in row) {
-          if(aTile.value == 2048) {
-            
-          }
+  gameLost() {
+    if(!isFull()) {
+      return false;
     }
-      }
+    for (let row = 0; row < 4; row++) {
+      for (let col = 0; col < 4; col++) {
+        let curTile = this.tiles[row][col];
 
-      return 
+        if(curTile.value = 0) {
+          return false;
+        }
+
+        if (row - 1 >= 0) {
+          let upNeighbor = this.tiles[row-1][col];
+          if (aTile.value == upNeighbor.value) {
+            return false;
+          }
+        }
+        if (row + 1 < 4) {
+          let downNeighbor = this.tiles[row+1][col];
+          if (aTile.value == downNeighbor.value) {
+            return false;
+          }
+        }
+        if (col - 1 >= 0) {
+          let leftNeighbor = this.tiles[row][col-1];
+          if (aTile.value == leftNeighbor.value) {
+            return false;
+          }
+        }
+        if (col + 1 < 4) {
+          let rightNeighbor = this.tiles[row][col+1];
+          if (aTile.value == rightNeighbor.value) {
+            return false;
+          }
+        }
+      }
     }
+    return true;
   }
 
   #isFull() {
-    for (let aTile in tiles) {
+    for (let aTile in this.tiles) {
       if(aTile.value == 0) {
         return false;
       }
@@ -154,7 +197,7 @@ class Board {
     do {
       let row = Math.floor(Math.random() * (max - min + 1)) + min;
       let col = Math.floor(Math.random() * (max - min + 1)) + min;
-    } while (tiles[row][col].value != 0);
+    } while (this.tiles[row][col].value != 0);
     
     const chooseTile = Math.random();
     const tileVal;
@@ -165,7 +208,7 @@ class Board {
       tileVal = 2;
     }
 
-    tiles[row][col] = new Tile(tileVal);
+    this.tiles[row][col] = new Tile(tileVal);
   }
 }
 

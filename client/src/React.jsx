@@ -8,6 +8,8 @@
 import './React.css';
 import React, {useState, useRef, useEffect} from 'react';
 
+let userID;
+
 function Header({children}) {
   return <div className="Header">{children}</div>;
 }
@@ -116,7 +118,7 @@ export default App;
 
 await fetchLiveLeaderboard();
 async function fetchLiveLeaderboard () {
-  fetch('http://localhost:3000/leaderboard/static')
+  fetch('http://localhost:3000/leaderboard/live')
     .then(response => response.json())
     .then(data => {
       console.log(data);
@@ -142,12 +144,20 @@ async function fetchStaticLeaderboard() {
 
 (async () => {
     try {
-        const eddie = await createUser({
+        await createUser({
           username: 'eddie'
         });
         await updateLiveLeaderboard({
-            userID: eddie,
+            userID: userID,
             score: 'eddie i like juice',
+            startTime: '2024-12-10T10:00:00',
+            endTime: '2024-12-10T10:00:00',
+            board: [1, 2, 3, 4, 5]
+        });
+        await fetchLiveLeaderboard();
+        await updateLiveLeaderboard({
+            userID: userID,
+            score: 'eddie i like juice also 2',
             startTime: '2024-12-10T10:00:00',
             endTime: '2024-12-10T10:00:00',
             board: [1, 2, 3, 4, 5]
@@ -158,9 +168,9 @@ async function fetchStaticLeaderboard() {
         console.error("Error:", error);
     }
 })();
-async function updateLiveLeaderboard( {username, score, endTime, winTime, board }) {
+async function updateLiveLeaderboard( { score, endTime, winTime, board }) {
   const payload = {
-    username,
+    userID,
     score, 
     endTime,
     winTime,
@@ -211,7 +221,7 @@ async function createUser({username}) {
   
     const data = await response.json(); // Parse the response
     console.log('User created successfully:', data);
-    return data; // Return the server's response
+    userID =  data; // Return the server's response
   } catch (error) {
       console.error(error);
   }
