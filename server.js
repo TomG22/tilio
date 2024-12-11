@@ -37,6 +37,7 @@ const Score = mongoose.model('Score', scoreSchema);
 const gameSchema = new mongoose.Schema({
   userID: mongoose.Schema.Types.ObjectId,
   scoreID: mongoose.Schema.Types.ObjectId,
+  username: String,
   score: String,
   board: [Number],
   startTime: Date,
@@ -55,6 +56,28 @@ app.use(express.static(path.join(__dirname, 'client/build')));
 app.use(express.json());
 
 app.use(express.static(path.join(__dirname, "build")));
+
+app.post("/createuser", async (req, res) => {
+  const {
+    username
+  } = req.body;
+
+  try {
+    const result = await GameLive.findOneAndUpdate(
+      { username },
+      {},
+      { new: true, upsert: true }
+    );
+
+    res.status(200).json({
+      message: 'Leaderboard updated successfully.',
+      data: result._id
+    });
+  } catch (error) {
+        console.error('Error adding user:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
 
 app.get("/leaderboard/static", async (req, res) => {
   try {
@@ -87,17 +110,20 @@ app.post("/leaderboard/live/update", async (req, res) => {
     const result = await GameLive.findOneAndUpdate(
       { username },
       { score, updatedAt: Date.now() },
-      { new: true, upstart: true }
+      { new: true, upsert: true }
     );
 
     if (winTime != 0) {
       await GameStatic.findOneAndUpdate(
         { username },
-        { score, updatedAt: Date.now() },
-        { endTime, updatedAt: Date.now() },
-        { winTime, updatedAt: Date.now() },
-        { board, updatedAt: Date.now() },
-        { new: true, upstart: true }
+        {
+            score,
+            endTime,
+            winTime,
+            board,
+            updatedAt: Date.now(),
+        },
+        { new: true, upsert: true }
       );
     }
 

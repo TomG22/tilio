@@ -142,8 +142,11 @@ async function fetchStaticLeaderboard() {
 
 (async () => {
     try {
+        const eddie = await createUser({
+          username: 'eddie'
+        });
         await updateLiveLeaderboard({
-            username: 'eddieis so colajsndkjnasjkd',
+            userID: eddie,
             score: 'eddie i like juice',
             startTime: '2024-12-10T10:00:00',
             endTime: '2024-12-10T10:00:00',
@@ -186,4 +189,30 @@ async function updateLiveLeaderboard( {username, score, endTime, winTime, board 
   }
 
 
+}
+async function createUser({username}) {
+  const payload = {
+    username
+  };
+
+  try {
+    const response = await fetch('http://localhost:3000/createuser', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+    if (!response.ok) {
+      // Log and throw an error if the response is not OK
+      const errorText = await response.text(); // Read the error response as plain text
+      throw new Error(`Server error: ${response.status} - ${errorText}`);
+    }
+  
+    const data = await response.json(); // Parse the response
+    console.log('User created successfully:', data);
+    return data; // Return the server's response
+  } catch (error) {
+      console.error(error);
+  }
 }
