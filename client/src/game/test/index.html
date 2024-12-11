@@ -3,49 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Board Key Test</title>
-</head>
-<body>
-    <h1>Arrow Key Tester</h1>
-    <p>Press the arrow keys to interact with the board. Open the console to see the output.</p>
-
+    <title>Board and Tile Tester</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 18px;
+            text-align: center;
+        }
+        table, th, td {
+            border: 1px solid black;
+            padding: 10px;
+        }
+    </style>
     <script type="module">
-        // Import the Board class from Board.js
-        import Board from './Board.js';
+        import Board from './Board.js'; // Ensure this path matches where Board.js is located
+        import Tile from './Tile.js';   // Ensure this path matches where Tile.js is located
 
-        // Instantiate the Board
+        // Initialize the Board object
         const board = new Board();
 
-        // Set up event listener for keydown events
-        document.addEventListener('keydown', (event) => {
+        // Ensure the Board class has a valid to2DArray method
+        if (typeof board.to2DArray !== 'function') {
+            console.error("The Board class does not have a to2DArray method. Please implement it.");
+        }
+
+        // Function to render the board in the table
+        function renderBoard() {
+            const boardContainer = document.getElementById('boardContainer');
+            boardContainer.innerHTML = ''; // Clear existing content
+
+            try {
+                const table = document.createElement('table');
+                const boardArray = board.tiles;
+
+                if (!Array.isArray(boardArray) || boardArray.length === 0) {
+                    throw new Error("The board's to2DArray method does not return a valid 2D array.");
+                }
+
+                boardArray.forEach(row => {
+                    const tableRow = document.createElement('tr');
+                    row.forEach(tileValue => {
+                        const cell = document.createElement('td');
+                        cell.textContent = tileValue;
+                        tableRow.appendChild(cell);
+                    });
+                    table.appendChild(tableRow);
+                });
+
+                boardContainer.appendChild(table);
+            } catch (error) {
+                console.error("Error rendering board:", error.message);
+                boardContainer.textContent = "Error displaying board. Check console for details.";
+            }
+        }
+
+        // Function to handle key presses
+        function handleKeyPress(event) {
             switch (event.key) {
                 case 'ArrowUp':
-                    console.log('Up key pressed');
-                    board.up();
+                    if (typeof board.up === 'function') board.up();
                     break;
                 case 'ArrowDown':
-                    console.log('Down key pressed');
-                    board.down();
+                    if (typeof board.down === 'function') board.down();
                     break;
                 case 'ArrowLeft':
-                    console.log('Left key pressed');
-                    board.left();
+                    if (typeof board.left === 'function') board.left();
                     break;
                 case 'ArrowRight':
-                    console.log('Right key pressed');
-                    board.right();
+                    if (typeof board.right === 'function') board.right();
                     break;
                 default:
-                    return; // Exit if another key is pressed
+                    return;
             }
+            renderBoard();
+        }
 
-            // Log the 2D array to the console
-            console.log('Board state:');
-            console.log(board.getBoard()[0].toString());
-            console.log(board.getBoard()[1].toString());
-            console.log(board.getBoard()[2].toString());
-            console.log(board.getBoard()[3].toString());
-        });
+        // Attach the event listener for keydown
+        window.addEventListener('keydown', handleKeyPress);
+
+        // Initial render
+        window.onload = renderBoard;
     </script>
+</head>
+<body>
+    <h1>Board and Tile Tester</h1>
+    <p>Use the arrow keys to move the board. The table below shows the board's current state:</p>
+    <div id="boardContainer"></div>
 </body>
 </html>
