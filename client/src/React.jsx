@@ -165,10 +165,19 @@ async function updateLiveLeaderboard( {username, score, endTime, winTime, board 
   };
 
   try {
-    const response = fetch('http://localhost:3000/leaderboard/live/update', {
+    const response = await fetch('http://localhost:3000/leaderboard/live/update', {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify(payload),
     });
+    if (!response.ok) {
+      // Log and throw an error if the response is not OK
+      const errorText = await response.text(); // Read the error response as plain text
+      throw new Error(`Server error: ${response.status} - ${errorText}`);
+    }
+  
     const data = await response.json(); // Parse the response
     console.log('Leaderboard updated successfully:', data);
     return data; // Return the server's response
