@@ -114,13 +114,16 @@ function App() {
 
 export default App;
 
-fetch('http://localhost:3000/leaderboard/static')
-  .then(response => response.json())
-  .then(data => {
-    console.log(data);
-  })
-    
-  .catch(error => {
-    console.log("meow");
-    console.error(error)}
-  );
+await fetchLeaderboard();
+async function fetchLeaderboard () {
+  fetch('http://localhost:3000/leaderboard/static')
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+    })
+      
+    .catch(error => {
+      console.log("meow");
+      console.error(error)}
+    );
+}
