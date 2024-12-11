@@ -4,7 +4,7 @@ const path = require('path');
 const cors = require('cors');
 
 const app = express();
-const PORT = 5000;
+const PORT = 3000;
 
 // Middleware
 app.use(cors());
@@ -45,7 +45,7 @@ const gameSchema = new mongoose.Schema({
 })
 
 
-const GameStatic = mongoose.model('GameStaic', gameSchema);
+const GameStatic = mongoose.model('GameStatic', gameSchema);
 
 const GameLive = mongoose.model('GameLive', gameSchema);
 
