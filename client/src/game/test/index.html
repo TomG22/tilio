@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Board Key Test</title>
+</head>
+<body>
+    <h1>Arrow Key Tester</h1>
+    <p>Press the arrow keys to interact with the board. Open the console to see the output.</p>
+
+    <script type="module">
+        // Import the Board class from Board.js
+        import Board from './Board.js';
+
+        // Instantiate the Board
+        const board = new Board();
+
+        // Set up event listener for keydown events
+        document.addEventListener('keydown', (event) => {
+            switch (event.key) {
+                case 'ArrowUp':
+                    console.log('Up key pressed');
+                    board.up();
+                    break;
+                case 'ArrowDown':
+                    console.log('Down key pressed');
+                    board.down();
+                    break;
+                case 'ArrowLeft':
+                    console.log('Left key pressed');
+                    board.left();
+                    break;
+                case 'ArrowRight':
+                    console.log('Right key pressed');
+                    board.right();
+                    break;
+                default:
+                    return; // Exit if another key is pressed
+            }
+
+            // Log the 2D array to the console
+            console.log('Board state:');
+            console.log(board.getBoard()[0].toString());
+            console.log(board.getBoard()[1].toString());
+            console.log(board.getBoard()[2].toString());
+            console.log(board.getBoard()[3].toString());
+        });
+    </script>
+</body>
+</html>

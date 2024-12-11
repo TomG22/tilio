@@ -177,6 +177,10 @@ class Board {
     return true;
   }
 
+  getBoard() {
+    return this.tiles;
+  }
+
   #isFull() {
     for (let aTile in this.tiles) {
       if(aTile.value == 0) {
