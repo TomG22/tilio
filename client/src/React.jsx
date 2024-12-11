@@ -114,16 +114,53 @@ function App() {
 
 export default App;
 
-await fetchLeaderboard();
-async function fetchLeaderboard () {
+await fetchLiveLeaderboard();
+async function fetchLiveLeaderboard () {
   fetch('http://localhost:3000/leaderboard/static')
     .then(response => response.json())
     .then(data => {
       console.log(data);
+      return data;
     })
       
     .catch(error => {
       console.log("meow");
       console.error(error)}
     );
+}
+
+
+await fetchStaticLeaderboard();
+async function fetchStaticLeaderboard() {
+  fetch('http://localhost:3000/leaderboard/static')
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      return data;
+    })
+}
+
+
+async function updateLiveLeaderboard( {username, score, endTime, winTime, board }) {
+  const payload = {
+    username,
+    score, 
+    endTime,
+    winTime,
+    board,
+  };
+
+  try {
+    const response = fetch('http://localhost:3000/leaderboard/live/update', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+    const data = await response.json(); // Parse the response
+    console.log('Leaderboard updated successfully:', data);
+    return data; // Return the server's response
+  } catch (error) {
+      console.error(error);
+  }
+
+
 }

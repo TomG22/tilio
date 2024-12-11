@@ -91,7 +91,7 @@ app.post("/leaderboard/live/update", async (req, res) => {
     );
 
     if (winTime != 0) {
-      await GameStaic.findOneAndUpdate(
+      await GameStatic.findOneAndUpdate(
         { username },
         { score, updatedAt: Date.now() },
         { endTime, updatedAt: Date.now() },
