@@ -29,6 +29,11 @@ class Board {
       for (let col = 0; col < 4; col++) {
         let a = this.tiles[row][col];
         let b = this.tiles[row+1][col];
+
+        if (a.frozen == true || b.frozen == true) {
+          continue;
+        }
+
         console.log("atile value: " + a.value);
         let mergedTile = Tile.merge(a, b);
         console.log("merged tile: " + mergedTile);
@@ -60,6 +65,9 @@ class Board {
         for (let prevRow = row -1; prevRow >= 0; prevRow--) {
           // if the previous row has an empty value, swap with the prev + 1 row
           if (this.tiles[prevRow][col].value == 0 && this.tiles[prevRow+1][col].value != 0) {
+            if(this.tiles[prevRow][col].frozen || this.tiles[prevRow+1][col].frozen) {
+              continue;
+            }
             this.tiles[prevRow][col] = this.tiles[prevRow + 1][col]
             this.tiles[prevRow + 1][col] = new Tile(0);
             console.log("MOVING UP");
@@ -80,6 +88,11 @@ class Board {
       for (let col = 0; col < 4; col++) {
         let a = this.tiles[row][col];
         let b = this.tiles[row-1][col];
+
+        if (a.frozen == true || b.frozen == true) {
+          continue;
+        }
+
         console.log("atile value: " + a.value);
         let mergedTile = Tile.merge(a, b);
         console.log("merged tile: " + mergedTile);
@@ -110,6 +123,9 @@ class Board {
         for (let prevRow = row +1; prevRow < 4; prevRow++) {
           // if the previous row has an empty value, swap with the prev + 1 row
           if (this.tiles[prevRow][col].value == 0 && this.tiles[prevRow-1][col].value != 0) {
+            if(this.tiles[prevRow][col].frozen || this.tiles[prevRow-1][col].frozen) {
+              continue;
+            }
             this.tiles[prevRow][col] = this.tiles[prevRow -1][col]
             this.tiles[prevRow - 1][col] = new Tile(0);
             result += 1;
@@ -129,6 +145,11 @@ class Board {
       for (let row = 0; row < 4; row++) {
         let a = this.tiles[row][col];
         let b = this.tiles[row][col+1];
+
+        if (a.frozen == true || b.frozen == true) {
+          continue;
+        }
+
         console.log("atile value: " + a.value);
         let mergedTile = Tile.merge(a, b);
         console.log("merged tile: " + mergedTile);
@@ -160,6 +181,9 @@ class Board {
       for (let prevCol = col -1; prevCol >= 0; prevCol--) {
         // if the previous row has an empty value, swap with the prev + 1 row
         if (this.tiles[row][prevCol].value == 0 && this.tiles[row][prevCol+1].value != 0) {
+            if(this.tiles[row][prevCol].frozen || this.tiles[row][prevCol+1].frozen) {
+              continue;
+            }
           this.tiles[row][prevCol] = this.tiles[row][prevCol+1];
           this.tiles[row][prevCol+1] = new Tile(0);
           result += 1;
@@ -178,6 +202,11 @@ class Board {
       for (let row = 0; row < 4; row++) {
         let a = this.tiles[row][col];
         let b = this.tiles[row][col-1];
+
+        if (a.frozen == true || b.frozen == true) {
+          continue;
+        }
+
         console.log("atile value: " + a.value);
         let mergedTile = Tile.merge(a, b);
         console.log("merged tile: " + mergedTile);
@@ -209,6 +238,9 @@ class Board {
       for (let prevCol = col + 1; prevCol < 4; prevCol++) {
         // if the previous row has an empty value, swap with the prev + 1 row
         if (this.tiles[row][prevCol].value == 0 && this.tiles[row][prevCol-1].value != 0) {
+          if(this.tiles[row][prevCol].frozen || this.tiles[row][prevCol-1].frozen) {
+            continue;
+          }
           this.tiles[row][prevCol] = this.tiles[row][prevCol-1];
           this.tiles[row][prevCol-1] = new Tile(0);
           result += 1;
@@ -265,9 +297,9 @@ class Board {
   }
 
   #isFull() {
-    for (let aRow in this.tiles) {
-      for (let aTile in aRow) {
-        if(aTile.value == 0) {
+    for (let row = 0; row < 4; row++) {
+      for (let col = 0; col < 4; col++) {
+        if(this.tiles[row][col].value == 0) {
           return false;
         }
       }
@@ -306,6 +338,50 @@ class Board {
     this.tiles[row][col] = new Tile(tileVal);
     console.log("new tile val: " + tileVal);
   }
-}
 
+  freezeTile() {
+    console.log("freezing a tile.");
+    let largest = null;
+    let secondLargest = null;
+
+    console.log(this.tiles);
+    for (let row = 0; row < 4; row++) {
+      console.log("Row: " + row);
+      for(let col = 0; col < 4; col++) {
+        let aTile = this.tiles[row][col];
+        console.log("at tile " + aTile);
+        if (largest == null ) {
+          largest = aTile;
+          console.log("found largest!");
+          console.log("Largest val" + aTile.value);
+          continue;
+        } else if (secondLargest == null && aTile.value <= largest.value) {
+          secondLargest = aTile;
+          console.log("found 2 largest!");
+          console.log("Second Largest val" + secondLargest.value);
+          continue;
+        }
+
+        if(aTile.value > largest.value) {
+          secondLargest = largest;
+          largest = aTile;
+          console.log("found largest!");
+          console.log("Largest val" + largest.value);
+          console.log("Second Largest val" + secondLargest.value);
+        } else if (secondLargest != null && aTile.value > secondLargest.value) {
+          secondLargest = aTile;
+          console.log("found 2 largest!");
+          console.log("Largest val" + largest.value);
+          console.log("Second Largest val" + secondLargest.value);
+        }
+      }
+    }
+
+    if(secondLargest != null) {
+      secondLargest.freeze();
+      console.log("FREEZING SECOND LARGEST " + secondLargest.value)
+    } 
+  }
+
+}
 export default Board;

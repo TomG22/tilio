@@ -7,6 +7,7 @@
 class Tile {
    constructor(value) {
      this.value = value;
+     this.frozen = false;
    }
 
    static merge(aTile, bTile) {
@@ -17,6 +18,13 @@ class Tile {
 
   toString() {
     return this.value.toString();
+  }
+
+  freeze() {
+    this.frozen = true;
+    setInterval(() => {
+      this.frozen = false;
+    }, 30000);
   }
 }
 export default Tile;

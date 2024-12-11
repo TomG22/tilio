@@ -83,6 +83,10 @@
                 case 'ArrowRight':
                     if (typeof board.right === 'function') board.right();
                     break;
+                case " ":
+                    console.log("Freezing tile");
+                    board.freezeTile();
+                    break;
                 default:
                     return;
             }
@@ -93,7 +97,9 @@
         window.addEventListener('keydown', handleKeyPress);
 
         // Initial render
-        window.onload = renderBoard;
+        window.onload = function() {
+            renderBoard();
+        };
     </script>
 </head>
 <body>
