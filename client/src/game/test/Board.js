@@ -21,9 +21,9 @@ class Board {
   }
 
   up(){
-    let hasMoved = false;
+    let movedCount = 0;
 
-    this.moveUp();
+    movedCount += this.moveUp();
     let merged = [];
     for (let row = 0; row < 3; row++) {
       for (let col = 0; col < 4; col++) {
@@ -42,37 +42,40 @@ class Board {
         }
       }
     }
-    hasMoved = this.moveUp();
-    console.log("merge length" + merged.length);
-    if(hasMoved) {
+    movedCount += this.moveUp();
+    console.log("hasMoved" + movedCount);
+    if(movedCount > 0) {
       console.log("Called fill random");
       this.fillRandom();
     }
+    console.log("Won: " + this.won);
+    console.log("Lost: " + this.#gameLost());
   }
 
   moveUp() {
-  let result = false;
-  for (let col = 0; col < 4; col++) {
-    for(let row = 1; row < 4; row++) {
-      // iterate over all previous rows
-      for (let prevRow = row -1; prevRow >= 0; prevRow--) {
-        // if the previous row has an empty value, swap with the prev + 1 row
-        if (this.tiles[prevRow][col].value == 0 && this.tiles[row][col].value != 0) {
-          this.tiles[prevRow][col] = this.tiles[prevRow + 1][col]
-          this.tiles[prevRow + 1][col] = new Tile(0);
-          result = true;
+    let result = 0;
+    for (let col = 0; col < 4; col++) {
+      for(let row = 1; row < 4; row++) {
+        // iterate over all previous rows
+        for (let prevRow = row -1; prevRow >= 0; prevRow--) {
+          // if the previous row has an empty value, swap with the prev + 1 row
+          if (this.tiles[prevRow][col].value == 0 && this.tiles[prevRow+1][col].value != 0) {
+            this.tiles[prevRow][col] = this.tiles[prevRow + 1][col]
+            this.tiles[prevRow + 1][col] = new Tile(0);
+            console.log("MOVING UP");
+            result += 1;
+          }
         }
       }
     }
+    return result;
   }
-  return result;
-}
 
   down() {
-    let hasMoved = false;
+    let movedCount = 0;
 
     let merged = [];
-    this.moveDown();
+    movedCount += this.moveDown();
     for (let row = 3; row > 0; row--) {
       for (let col = 0; col < 4; col++) {
         let a = this.tiles[row][col];
@@ -90,24 +93,26 @@ class Board {
         }
       }
     }
-    hasMoved = this.moveDown();
-    if(hasMoved) {
+    movedCount += this.moveDown();
+    if(movedCount > 0) {
       console.log("Called fill random");
       this.fillRandom();
     }
+    console.log("Won: " + this.won);
+    console.log("Lost: " + this.#gameLost());
   }
 
   moveDown() {
-    let result = false;
+    let result = 0;
     for (let col = 0; col < 4; col++) {
       for(let row = 2; row >= 0; row--) {
         // iterate over all previous rows
         for (let prevRow = row +1; prevRow < 4; prevRow++) {
           // if the previous row has an empty value, swap with the prev + 1 row
-          if (this.tiles[prevRow][col].value == 0 && this.tiles[row][col].value != 0) {
+          if (this.tiles[prevRow][col].value == 0 && this.tiles[prevRow-1][col].value != 0) {
             this.tiles[prevRow][col] = this.tiles[prevRow -1][col]
             this.tiles[prevRow - 1][col] = new Tile(0);
-            result = true;
+            result += 1;
           }
         }
       }
@@ -116,9 +121,9 @@ class Board {
   }
 
   left(){
-    let hasMoved = false;
+    let movedCount = 0;
 
-    this.moveLeft();
+    this.movedCount += this.moveLeft();
     let merged = [];
     for (let col = 0; col < 3; col++) {
       for (let row = 0; row < 4; row++) {
@@ -137,25 +142,27 @@ class Board {
         }
       }
     }
-    hasMoved = this.moveLeft();
+    movedCount += this.moveLeft();
     console.log("merge length" + merged.length);
-    if(hasMoved) {
+    if(movedCount > 0) {
       console.log("Called fill random");
       this.fillRandom();
     }
+    console.log("Won: " + this.won);
+    console.log("Lost: " + this.#gameLost());
   }
 
   moveLeft() {
-  let result = false;
+  let result = 0;
   for (let col = 1; col < 4; col++) {
     for(let row = 0; row < 4; row++) {
       // iterate over all previous rows
       for (let prevCol = col -1; prevCol >= 0; prevCol--) {
         // if the previous row has an empty value, swap with the prev + 1 row
-        if (this.tiles[row][prevCol].value == 0 && this.tiles[row][col].value != 0) {
+        if (this.tiles[row][prevCol].value == 0 && this.tiles[row][prevCol+1].value != 0) {
           this.tiles[row][prevCol] = this.tiles[row][prevCol+1];
           this.tiles[row][prevCol+1] = new Tile(0);
-          result = true;
+          result += 1;
         }
       }
     }
@@ -163,9 +170,9 @@ class Board {
   return result;
 }
   right(){
-    let hasMoved = false;
+    let movedCount = 0;
 
-    this.moveRight();
+    movedCount += this.moveRight();
     let merged = [];
     for (let col = 3; col > 0; col--) {
       for (let row = 0; row < 4; row++) {
@@ -184,25 +191,27 @@ class Board {
         }
       }
     }
-    hasMoved = this.moveRight();
+    movedCount += this.moveRight();
     console.log("merge length" + merged.length);
-    if(hasMoved) {
+    if(movedCount > 0) {
       console.log("Called fill random");
       this.fillRandom();
     }
+    console.log("Won: " + this.won);
+    console.log("Lost: " + this.#gameLost());
   }
 
   moveRight() {
-  let result = false;
+  let result = 0;
   for (let col = 2; col >= 0; col--) {
     for(let row = 0; row < 4; row++) {
       // iterate over all previous rows
       for (let prevCol = col + 1; prevCol < 4; prevCol++) {
         // if the previous row has an empty value, swap with the prev + 1 row
-        if (this.tiles[row][prevCol].value == 0 && this.tiles[row][col].value != 0) {
+        if (this.tiles[row][prevCol].value == 0 && this.tiles[row][prevCol-1].value != 0) {
           this.tiles[row][prevCol] = this.tiles[row][prevCol-1];
           this.tiles[row][prevCol-1] = new Tile(0);
-          result = true;
+          result += 1;
         }
       }
     }
@@ -210,39 +219,39 @@ class Board {
   return result;
 }
 
-  gameLost() {
-    if(!isFull()) {
+  #gameLost() {
+    if(!this.#isFull()) {
       return false;
     }
     for (let row = 0; row < 4; row++) {
       for (let col = 0; col < 4; col++) {
         let curTile = this.tiles[row][col];
 
-        if(curTile.value = 0) {
+        if(curTile.value == 0) {
           return false;
         }
 
         if (row - 1 >= 0) {
           let upNeighbor = this.tiles[row-1][col];
-          if (aTile.value == upNeighbor.value) {
+          if (curTile.value == upNeighbor.value) {
             return false;
           }
         }
         if (row + 1 < 4) {
           let downNeighbor = this.tiles[row+1][col];
-          if (aTile.value == downNeighbor.value) {
+          if (curTile.value == downNeighbor.value) {
             return false;
           }
         }
         if (col - 1 >= 0) {
           let leftNeighbor = this.tiles[row][col-1];
-          if (aTile.value == leftNeighbor.value) {
+          if (curTile.value == leftNeighbor.value) {
             return false;
           }
         }
         if (col + 1 < 4) {
           let rightNeighbor = this.tiles[row][col+1];
-          if (aTile.value == rightNeighbor.value) {
+          if (curTile.value == rightNeighbor.value) {
             return false;
           }
         }

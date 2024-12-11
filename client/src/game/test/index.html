@@ -5,15 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Board and Tile Tester</title>
     <style>
-        table {
-            border-collapse: collapse;
+        #boardContainer {
+            display: grid;
+            grid-template-columns: repeat(4, 50px);
+            gap: 5px;
             margin: 20px 0;
+        }
+        .tile {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid black;
             font-size: 18px;
             text-align: center;
         }
-        table, th, td {
-            border: 1px solid black;
-            padding: 10px;
+        .tile.empty {
+            background-color: #f0f0f0;
         }
     </style>
     <script type="module">
@@ -28,13 +37,12 @@
             console.error("The Board class does not have a to2DArray method. Please implement it.");
         }
 
-        // Function to render the board in the table
+        // Function to render the board using spans
         function renderBoard() {
             const boardContainer = document.getElementById('boardContainer');
             boardContainer.innerHTML = ''; // Clear existing content
 
             try {
-                const table = document.createElement('table');
                 const boardArray = board.tiles;
 
                 if (!Array.isArray(boardArray) || boardArray.length === 0) {
@@ -42,16 +50,18 @@
                 }
 
                 boardArray.forEach(row => {
-                    const tableRow = document.createElement('tr');
                     row.forEach(tileValue => {
-                        const cell = document.createElement('td');
-                        cell.textContent = tileValue;
-                        tableRow.appendChild(cell);
+                        const span = document.createElement('span');
+                        span.classList.add('tile');
+                        if (tileValue === 0) {
+                            span.classList.add('empty');
+                        } else {
+                            span.textContent = tileValue;
+                        }
+                        boardContainer.appendChild(span);
                     });
-                    table.appendChild(tableRow);
                 });
 
-                boardContainer.appendChild(table);
             } catch (error) {
                 console.error("Error rendering board:", error.message);
                 boardContainer.textContent = "Error displaying board. Check console for details.";
@@ -88,7 +98,7 @@
 </head>
 <body>
     <h1>Board and Tile Tester</h1>
-    <p>Use the arrow keys to move the board. The table below shows the board's current state:</p>
+    <p>Use the arrow keys to move the board. The grid below shows the board's current state:</p>
     <div id="boardContainer"></div>
 </body>
 </html>
