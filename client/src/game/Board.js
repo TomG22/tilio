@@ -72,7 +72,7 @@ class Board {
 
     let merged;
       for (let col = 4; col > 0; col--) {
-        for (let row = 0; row < 3; row++) {
+        for (let row = 0; row < 4; row++) {
           let a = Tiles[row][col];
           let b = Tiles[row][col-1];
           let mergedTile = Tile.merge(a, b);
@@ -82,7 +82,7 @@ class Board {
             merged.push(mergedTile);
           } else if (b.value == 0) {
             for (let colMove = col; colMove >= 0; colMove++) {
-              tiles[row][colMove] = tile[row][colMove];
+              tiles[row][colMove + 1] = tile[row][colMove];
             }
           }
         }
@@ -98,8 +98,8 @@ class Board {
     let hasMerges = true;
 
     let merged;
-      for (let col = 0; col < 3; col+) {
-        for (let row = 0; row < 3; row++) {
+      for (let col = 0; col < 3; col++) {
+        for (let row = 0; row < 4; row++) {
           let a = Tiles[row][col];
           let b = Tiles[row][col+1];
           let mergedTile = Tile.merge(a, b);
@@ -109,7 +109,7 @@ class Board {
             merged.push(mergedTile);
           } else if (b.value == 0) {
             for (let colMove = col; colMove >= 0; colMove--) {
-              tiles[row][colMove] = tile[row][colMove];
+              tiles[row][colMove - 1] = tile[row][colMove];
             }
           }
         }
