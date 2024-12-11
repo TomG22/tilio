@@ -54,6 +54,8 @@ app.use(express.static(path.join(__dirname, 'client/build')));
 // Handle any requests that don't match static files
 app.use(express.json());
 
+app.use(express.static(path.join(__dirname, "build")));
+
 app.get("/leaderboard/static", async (req, res) => {
   try {
     console.log("Got the static get")

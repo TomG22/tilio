@@ -5,6 +5,7 @@
  */
 
 
+
 class Board {
   constructor() {
     for (let row = 0; row < 4; row++) {
@@ -117,6 +118,30 @@ class Board {
     if(merged.length > 0) {
       fillRandom();
     }
+  }
+
+  gameOver() {
+    if(!isFull) {
+      for (let row : tiles) {
+        for (let aTile in row) {
+          if(aTile.value == 2048) {
+            
+          }
+    }
+      }
+
+      return 
+    }
+  }
+
+  #isFull() {
+    for (let aTile in tiles) {
+      if(aTile.value == 0) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   #fillRandom() {
