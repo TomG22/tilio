@@ -140,7 +140,21 @@ async function fetchStaticLeaderboard() {
     })
 }
 
-
+(async () => {
+    try {
+        await updateLiveLeaderboard({
+            username: 'eddieis so colajsndkjnasjkd',
+            score: 'eddie i like juice',
+            startTime: '2024-12-10T10:00:00',
+            endTime: '2024-12-10T10:00:00',
+            board: [1, 2, 3, 4, 5]
+        });
+        await fetchLiveLeaderboard();
+        console.log("OWOOOOOWOWOWOOO");
+    } catch (error) {
+        console.error("Error:", error);
+    }
+})();
 async function updateLiveLeaderboard( {username, score, endTime, winTime, board }) {
   const payload = {
     username,
