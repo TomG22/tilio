@@ -114,12 +114,13 @@ function App() {
 
 export default App;
 
-fetch('http://localhost:3000/leaderboard/static', {
-  method: 'GET',
-  headers: {
-    'Content-Type': 'application/json'
-  }
-})
-  .then(response => response)
-  .then(data => console.log(data))
-  .catch(error => console.error(error));
+fetch('http://localhost:3000/leaderboard/static')
+  .then(response => response.json())
+  .then(data => {
+    console.log(data);
+  })
+    
+  .catch(error => {
+    console.log("meow");
+    console.error(error)}
+  );

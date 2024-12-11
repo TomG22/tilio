@@ -52,24 +52,22 @@ const GameLive = mongoose.model('GameLive', gameSchema);
 app.use(express.static(path.join(__dirname, 'client/build')));
 
 // Handle any requests that don't match static files
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
-});
 app.use(express.json());
 
 app.get("/leaderboard/static", async (req, res) => {
   try {
+    console.log("Got the static get")
     const leaderboard = await GameStatic.find().sort({ score: 1});
-    res.send(leaderboard);
+    res.json(leaderboard);
   } catch (error){
-
+    console.error(error);
   }
 });
 
 app.get("/leaderboard/live", async (req, res) => {
   try {
     const leaderboard = await GameLive.find().sort({ score: 1});
-    res.send(leaderboard);
+    res.json(leaderboard);
   } catch (error){
 
   }
