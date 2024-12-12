@@ -79,6 +79,28 @@ app.post("/createuser", async (req, res) => {
   }
 });
 
+app.get("/attacked", async (req, res) => {
+  const {
+    frozen
+  } = req.body;
+
+  try {
+    const result = await GameLive.findOneAndUpdate(
+      { username },
+      {},
+      { new: true, upsert: true }
+    );
+
+    res.status(200).json({
+      message: 'Leaderboard updated successfully.',
+      data: result._id
+    });
+  } catch (error) {
+        console.error('Error adding user:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
 app.get("/leaderboard/static", async (req, res) => {
   try {
     console.log("Got the static get")

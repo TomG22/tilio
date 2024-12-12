@@ -30,18 +30,18 @@ class Board {
         let a = this.tiles[row][col];
         let b = this.tiles[row+1][col];
 
-        if (a.frozen == true || b.frozen == true) {
+        if (a.data.frozen == true || b.data.frozen == true) {
           continue;
         }
 
-        console.log("atile value: " + a.value);
+        console.log("atile.data.value: " + a.data.value);
         let mergedTile = Tile.merge(a, b);
         console.log("merged tile: " + mergedTile);
         if(mergedTile != null && !merged.includes(a) && !merged.includes(b)){
           this.tiles[row][col] = mergedTile;
           this.tiles[row + 1][col] = new Tile(0);
           merged.push(mergedTile);
-          if(merged.value == 2048) {
+          if(mergedTile.data.value == 2048) {
             this.won = true;
           }
         }
@@ -63,9 +63,9 @@ class Board {
       for(let row = 1; row < 4; row++) {
         // iterate over all previous rows
         for (let prevRow = row -1; prevRow >= 0; prevRow--) {
-          // if the previous row has an empty value, swap with the prev + 1 row
-          if (this.tiles[prevRow][col].value == 0 && this.tiles[prevRow+1][col].value != 0) {
-            if(this.tiles[prevRow][col].frozen || this.tiles[prevRow+1][col].frozen) {
+          // if the previous row has an empty.data.value, swap with the prev + 1 row
+          if (this.tiles[prevRow][col].data.value == 0 && this.tiles[prevRow+1][col].data.value != 0) {
+            if(this.tiles[prevRow][col].data.frozen || this.tiles[prevRow+1][col].data.frozen) {
               continue;
             }
             this.tiles[prevRow][col] = this.tiles[prevRow + 1][col]
@@ -89,18 +89,18 @@ class Board {
         let a = this.tiles[row][col];
         let b = this.tiles[row-1][col];
 
-        if (a.frozen == true || b.frozen == true) {
+        if (a.data.frozen == true || b.data.frozen == true) {
           continue;
         }
 
-        console.log("atile value: " + a.value);
+        console.log("atile.data.value: " + a.data.value);
         let mergedTile = Tile.merge(a, b);
         console.log("merged tile: " + mergedTile);
         if(mergedTile != null && !merged.includes(a) && !merged.includes(b)){
           this.tiles[row][col] = mergedTile;
           this.tiles[row - 1][col] = new Tile(0);
           merged.push(mergedTile);
-          if(merged.value == 2048) {
+          if(mergedTile.data.value == 2048) {
             this.won = true;
           }
         }
@@ -121,9 +121,9 @@ class Board {
       for(let row = 2; row >= 0; row--) {
         // iterate over all previous rows
         for (let prevRow = row +1; prevRow < 4; prevRow++) {
-          // if the previous row has an empty value, swap with the prev + 1 row
-          if (this.tiles[prevRow][col].value == 0 && this.tiles[prevRow-1][col].value != 0) {
-            if(this.tiles[prevRow][col].frozen || this.tiles[prevRow-1][col].frozen) {
+          // if the previous row has an empty.data.value, swap with the prev + 1 row
+          if (this.tiles[prevRow][col].data.value == 0 && this.tiles[prevRow-1][col].data.value != 0) {
+            if(this.tiles[prevRow][col].data.frozen || this.tiles[prevRow-1][col].data.frozen) {
               continue;
             }
             this.tiles[prevRow][col] = this.tiles[prevRow -1][col]
@@ -146,18 +146,18 @@ class Board {
         let a = this.tiles[row][col];
         let b = this.tiles[row][col+1];
 
-        if (a.frozen == true || b.frozen == true) {
+        if (a.data.frozen == true || b.data.frozen == true) {
           continue;
         }
 
-        console.log("atile value: " + a.value);
+        console.log("atile.data.value: " + a.data.value);
         let mergedTile = Tile.merge(a, b);
         console.log("merged tile: " + mergedTile);
         if(mergedTile != null && !merged.includes(a) && !merged.includes(b)){
           this.tiles[row][col] = mergedTile;
           this.tiles[row][col+1] = new Tile(0);
           merged.push(mergedTile);
-          if(merged.value == 2048) {
+          if(mergedTile.data.value == 2048) {
             this.won = true;
           }
         }
@@ -179,9 +179,9 @@ class Board {
     for(let row = 0; row < 4; row++) {
       // iterate over all previous rows
       for (let prevCol = col -1; prevCol >= 0; prevCol--) {
-        // if the previous row has an empty value, swap with the prev + 1 row
-        if (this.tiles[row][prevCol].value == 0 && this.tiles[row][prevCol+1].value != 0) {
-            if(this.tiles[row][prevCol].frozen || this.tiles[row][prevCol+1].frozen) {
+        // if the previous row has an empty.data.value, swap with the prev + 1 row
+        if (this.tiles[row][prevCol].data.value == 0 && this.tiles[row][prevCol+1].data.value != 0) {
+            if(this.tiles[row][prevCol].data.frozen || this.tiles[row][prevCol+1].data.frozen) {
               continue;
             }
           this.tiles[row][prevCol] = this.tiles[row][prevCol+1];
@@ -203,18 +203,18 @@ class Board {
         let a = this.tiles[row][col];
         let b = this.tiles[row][col-1];
 
-        if (a.frozen == true || b.frozen == true) {
+        if (a.data.frozen == true || b.data.frozen == true) {
           continue;
         }
 
-        console.log("atile value: " + a.value);
+        console.log("atile.data.value: " + a.data.value);
         let mergedTile = Tile.merge(a, b);
         console.log("merged tile: " + mergedTile);
         if(mergedTile != null && !merged.includes(a) && !merged.includes(b)){
           this.tiles[row][col] = mergedTile;
           this.tiles[row][col-1] = new Tile(0);
           merged.push(mergedTile);
-          if(merged.value == 2048) {
+          if(mergedTile.data.value == 2048) {
             this.won = true;
           }
         }
@@ -236,9 +236,9 @@ class Board {
     for(let row = 0; row < 4; row++) {
       // iterate over all previous rows
       for (let prevCol = col + 1; prevCol < 4; prevCol++) {
-        // if the previous row has an empty value, swap with the prev + 1 row
-        if (this.tiles[row][prevCol].value == 0 && this.tiles[row][prevCol-1].value != 0) {
-          if(this.tiles[row][prevCol].frozen || this.tiles[row][prevCol-1].frozen) {
+        // if the previous row has an empty.data.value, swap with the prev + 1 row
+        if (this.tiles[row][prevCol].data.value == 0 && this.tiles[row][prevCol-1].data.value != 0) {
+          if(this.tiles[row][prevCol].data.frozen || this.tiles[row][prevCol-1].data.frozen) {
             continue;
           }
           this.tiles[row][prevCol] = this.tiles[row][prevCol-1];
@@ -259,31 +259,31 @@ class Board {
       for (let col = 0; col < 4; col++) {
         let curTile = this.tiles[row][col];
 
-        if(curTile.value == 0) {
+        if(curTile.data.value == 0) {
           return false;
         }
 
         if (row - 1 >= 0) {
           let upNeighbor = this.tiles[row-1][col];
-          if (curTile.value == upNeighbor.value) {
+          if (curTile.data.value == upNeighbor.data.value) {
             return false;
           }
         }
         if (row + 1 < 4) {
           let downNeighbor = this.tiles[row+1][col];
-          if (curTile.value == downNeighbor.value) {
+          if (curTile.data.value == downNeighbor.data.value) {
             return false;
           }
         }
         if (col - 1 >= 0) {
           let leftNeighbor = this.tiles[row][col-1];
-          if (curTile.value == leftNeighbor.value) {
+          if (curTile.data.value == leftNeighbor.data.value) {
             return false;
           }
         }
         if (col + 1 < 4) {
           let rightNeighbor = this.tiles[row][col+1];
-          if (curTile.value == rightNeighbor.value) {
+          if (curTile.data.value == rightNeighbor.data.value) {
             return false;
           }
         }
@@ -299,7 +299,7 @@ class Board {
   #isFull() {
     for (let row = 0; row < 4; row++) {
       for (let col = 0; col < 4; col++) {
-        if(this.tiles[row][col].value == 0) {
+        if(this.tiles[row][col].data.value == 0) {
           return false;
         }
       }
@@ -323,7 +323,7 @@ class Board {
       console.log("generating new random");
       row = Math.floor(Math.random() * (max - min + 1)) + min;
       col = Math.floor(Math.random() * (max - min + 1)) + min;
-    } while (this.tiles[row][col].value !== 0);
+    } while (this.tiles[row][col].data.value !== 0);
     
     const chooseTile = Math.random();
     console.log("chooseTile " + chooseTile);
@@ -353,33 +353,33 @@ class Board {
         if (largest == null ) {
           largest = aTile;
           console.log("found largest!");
-          console.log("Largest val" + aTile.value);
+          console.log("Largest val" + aTile.data.value);
           continue;
-        } else if (secondLargest == null && aTile.value <= largest.value) {
+        } else if (secondLargest == null && aTile.data.value <= largest.data.value) {
           secondLargest = aTile;
           console.log("found 2 largest!");
-          console.log("Second Largest val" + secondLargest.value);
+          console.log("Second Largest val" + secondLargest.data.value);
           continue;
         }
 
-        if(aTile.value > largest.value) {
+        if(aTile.data.value > largest.data.value) {
           secondLargest = largest;
           largest = aTile;
           console.log("found largest!");
-          console.log("Largest val" + largest.value);
-          console.log("Second Largest val" + secondLargest.value);
-        } else if (secondLargest != null && aTile.value > secondLargest.value) {
+          console.log("Largest val" + largest.data.value);
+          console.log("Second Largest val" + secondLargest.data.value);
+        } else if (secondLargest != null && aTile.data.value > secondLargest.data.value) {
           secondLargest = aTile;
           console.log("found 2 largest!");
-          console.log("Largest val" + largest.value);
-          console.log("Second Largest val" + secondLargest.value);
+          console.log("Largest val" + largest.data.value);
+          console.log("Second Largest val" + secondLargest.data.value);
         }
       }
     }
 
     if(secondLargest != null) {
       secondLargest.freeze();
-      console.log("FREEZING SECOND LARGEST " + secondLargest.value)
+      console.log("FREEZING SECOND LARGEST " + secondLargest.data.value)
     } 
   }
 

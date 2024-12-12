@@ -5,26 +5,30 @@
  */
 
 class Tile {
-   constructor(value) {
-     this.value = value;
-     this.frozen = false;
-   }
+  constructor(value) {
+    this.data = {
+      value: value,
+      frozen: false
+    };
+  }
 
-   static merge(aTile, bTile) {
-     if(aTile.value != 0 && aTile.value == bTile.value)
-      return new Tile(aTile.value + bTile.value);
-     return null;
-   }
+  static merge(aTile, bTile) {
+    if (aTile.data.value !== 0 && aTile.data.value === bTile.data.value) {
+      return new Tile(aTile.data.value + bTile.data.value);
+    }
+    return null;
+  }
 
   toString() {
-    return this.value.toString();
+    return this.data.value.toString();
   }
 
   freeze() {
-    this.frozen = true;
+    this.data.frozen = true;
     setInterval(() => {
-      this.frozen = false;
+      this.data.frozen = false;
     }, 30000);
   }
 }
+
 export default Tile;
