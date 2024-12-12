@@ -8,9 +8,10 @@ class Tile {
   // constructs a tile object with its values stored in JSON object
   constructor(value) {
     this.data = {
-      value: Number,
+      value: value,
       frozen: false
     };
+
   }
 
   /**
