@@ -41,9 +41,9 @@ const Score = mongoose.model('Score', scoreSchema);
  * - Eddie
  */
 const tileSchema = new mongoose.Schema({
-    value: Number,
-    frozen: false
-})
+  value: { type: Number },
+  frozen: { type: Boolean, default: false }
+});
 
 const Boards = mongoose.model('Boards', tileSchema);
 const gameSchema = new mongoose.Schema({
