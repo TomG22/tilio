@@ -118,7 +118,7 @@ export default App;
 
 await fetchLiveLeaderboard();
 async function fetchLiveLeaderboard () {
-  fetch('http://localhost:3000/leaderboard/live')
+    await fetch('http://localhost:3000/leaderboard/live')
     .then(response => response.json())
     .then(data => {
       console.log(data);
@@ -134,12 +134,39 @@ async function fetchLiveLeaderboard () {
 
 await fetchStaticLeaderboard();
 async function fetchStaticLeaderboard() {
-  fetch('http://localhost:3000/leaderboard/static')
+    await fetch('http://localhost:3000/leaderboard/static')
     .then(response => response.json())
     .then(data => {
       console.log(data);
       return data;
     })
+}
+
+async function fetchUpdatedBoard () {
+  const payload = {
+    username
+  };
+
+  try {
+    const response = await fetch('http://localhost:3000/getBoardUpdate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+    if (!response.ok) {
+      // Log and throw an error if the response is not OK
+      const errorText = await response.text(); // Read the error response as plain text
+      throw new Error(`Server error: ${response.status} - ${errorText}`);
+    }
+  
+    const data = await response.json(); // Parse the response
+    console.log('Leaderboard updated successfully:', data);
+    return data; // Return the server's response
+  } catch (error) {
+      console.error(error);
+  }
 }
 
 (async () => {

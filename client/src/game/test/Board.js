@@ -7,6 +7,10 @@
 import Tile from './Tile.js';
 
 class Board {
+  /*
+  * constructs a new board object, generating two random tiles 
+  * as in the original game
+  */
   constructor() {
     this.won = false;
     this.tiles = [];
@@ -20,6 +24,10 @@ class Board {
     this.fillRandom();
   }
 
+  /*
+  * function called by client frontend to correspond to the user
+  * pressing an up key
+  */
   up(){
     let movedCount = 0;
 
@@ -57,6 +65,10 @@ class Board {
     console.log("Lost: " + this.#gameLost());
   }
 
+  /*
+   * helper method that moves all tiles in the board to the northern
+   * most position
+   */
   moveUp() {
     let result = 0;
     for (let col = 0; col < 4; col++) {
@@ -79,6 +91,10 @@ class Board {
     return result;
   }
 
+  /*
+  * function called by client frontend to correspond to the user
+  * pressing an down key
+  */
   down() {
     let movedCount = 0;
 
@@ -115,6 +131,10 @@ class Board {
     console.log("Lost: " + this.#gameLost());
   }
 
+  /*
+   * helper method that moves all tiles in the board to the southern 
+   * most position
+   */
   moveDown() {
     let result = 0;
     for (let col = 0; col < 4; col++) {
@@ -136,6 +156,10 @@ class Board {
     return result;
   }
 
+  /*
+  * function called by client frontend to correspond to the user
+  * pressing a left key
+  */
   left(){
     let movedCount = 0;
 
@@ -173,26 +197,34 @@ class Board {
     console.log("Lost: " + this.#gameLost());
   }
 
+  /*
+   * helper method that moves all tiles in the board to the western 
+   * most position
+   */
   moveLeft() {
-  let result = 0;
-  for (let col = 1; col < 4; col++) {
-    for(let row = 0; row < 4; row++) {
-      // iterate over all previous rows
-      for (let prevCol = col -1; prevCol >= 0; prevCol--) {
-        // if the previous row has an empty.data.value, swap with the prev + 1 row
-        if (this.tiles[row][prevCol].data.value == 0 && this.tiles[row][prevCol+1].data.value != 0) {
-            if(this.tiles[row][prevCol].data.frozen || this.tiles[row][prevCol+1].data.frozen) {
-              continue;
-            }
-          this.tiles[row][prevCol] = this.tiles[row][prevCol+1];
-          this.tiles[row][prevCol+1] = new Tile(0);
-          result += 1;
+    let result = 0;
+    for (let col = 1; col < 4; col++) {
+      for(let row = 0; row < 4; row++) {
+        // iterate over all previous rows
+        for (let prevCol = col -1; prevCol >= 0; prevCol--) {
+          // if the previous row has an empty.data.value, swap with the prev + 1 row
+          if (this.tiles[row][prevCol].data.value == 0 && this.tiles[row][prevCol+1].data.value != 0) {
+              if(this.tiles[row][prevCol].data.frozen || this.tiles[row][prevCol+1].data.frozen) {
+                continue;
+              }
+            this.tiles[row][prevCol] = this.tiles[row][prevCol+1];
+            this.tiles[row][prevCol+1] = new Tile(0);
+            result += 1;
+          }
         }
       }
     }
+    return result;
   }
-  return result;
-}
+  /*
+  * function called by client frontend to correspond to the user
+  * pressing a right key
+  */
   right(){
     let movedCount = 0;
 
@@ -230,27 +262,34 @@ class Board {
     console.log("Lost: " + this.#gameLost());
   }
 
+  /*
+   * helper method that moves all tiles in the board to the eastern 
+   * most position
+   */
   moveRight() {
-  let result = 0;
-  for (let col = 2; col >= 0; col--) {
-    for(let row = 0; row < 4; row++) {
-      // iterate over all previous rows
-      for (let prevCol = col + 1; prevCol < 4; prevCol++) {
-        // if the previous row has an empty.data.value, swap with the prev + 1 row
-        if (this.tiles[row][prevCol].data.value == 0 && this.tiles[row][prevCol-1].data.value != 0) {
-          if(this.tiles[row][prevCol].data.frozen || this.tiles[row][prevCol-1].data.frozen) {
-            continue;
+    let result = 0;
+    for (let col = 2; col >= 0; col--) {
+      for(let row = 0; row < 4; row++) {
+        // iterate over all previous rows
+        for (let prevCol = col + 1; prevCol < 4; prevCol++) {
+          // if the previous row has an empty.data.value, swap with the prev + 1 row
+          if (this.tiles[row][prevCol].data.value == 0 && this.tiles[row][prevCol-1].data.value != 0) {
+            if(this.tiles[row][prevCol].data.frozen || this.tiles[row][prevCol-1].data.frozen) {
+              continue;
+            }
+            this.tiles[row][prevCol] = this.tiles[row][prevCol-1];
+            this.tiles[row][prevCol-1] = new Tile(0);
+            result += 1;
           }
-          this.tiles[row][prevCol] = this.tiles[row][prevCol-1];
-          this.tiles[row][prevCol-1] = new Tile(0);
-          result += 1;
         }
       }
     }
+    return result;
   }
-  return result;
-}
 
+  /*
+  * private helper method used to check if the game was lost
+  */
   #gameLost() {
     if(!this.#isFull()) {
       return false;
@@ -292,10 +331,9 @@ class Board {
     return true;
   }
 
-  getBoard() {
-    return this.tiles;
-  }
-
+  /*
+  * isFull is a private helper method to check if the board is full
+  */
   #isFull() {
     for (let row = 0; row < 4; row++) {
       for (let col = 0; col < 4; col++) {
@@ -308,6 +346,14 @@ class Board {
     return true;
   }
 
+
+  /*
+  * fillRandom creates a new Tile with a value of 1 or 2
+  * and places it in an random empty index of the board
+  *
+  * will produce a 2 Tile 90% of the time and a 4 Tile 
+  * the other 10%
+  */
   fillRandom() {
     const min = 0;
     const max = 3;
@@ -320,13 +366,11 @@ class Board {
     }
 
     do {
-      console.log("generating new random");
       row = Math.floor(Math.random() * (max - min + 1)) + min;
       col = Math.floor(Math.random() * (max - min + 1)) + min;
     } while (this.tiles[row][col].data.value !== 0);
     
     const chooseTile = Math.random();
-    console.log("chooseTile " + chooseTile);
     let tileVal;
 
     if (chooseTile >= 0.90) {
@@ -336,51 +380,41 @@ class Board {
     }
 
     this.tiles[row][col] = new Tile(tileVal);
-    console.log("new tile val: " + tileVal);
   }
 
+  /*
+  * freezes the second largest tile in the gameboard for 30
+  * seconds
+  */
   freezeTile() {
-    console.log("freezing a tile.");
     let largest = null;
     let secondLargest = null;
 
-    console.log(this.tiles);
     for (let row = 0; row < 4; row++) {
-      console.log("Row: " + row);
       for(let col = 0; col < 4; col++) {
         let aTile = this.tiles[row][col];
-        console.log("at tile " + aTile);
         if (largest == null ) {
           largest = aTile;
-          console.log("found largest!");
-          console.log("Largest val" + aTile.data.value);
           continue;
         } else if (secondLargest == null && aTile.data.value <= largest.data.value) {
           secondLargest = aTile;
-          console.log("found 2 largest!");
-          console.log("Second Largest val" + secondLargest.data.value);
           continue;
         }
 
         if(aTile.data.value > largest.data.value) {
           secondLargest = largest;
           largest = aTile;
-          console.log("found largest!");
-          console.log("Largest val" + largest.data.value);
-          console.log("Second Largest val" + secondLargest.data.value);
         } else if (secondLargest != null && aTile.data.value > secondLargest.data.value) {
           secondLargest = aTile;
-          console.log("found 2 largest!");
-          console.log("Largest val" + largest.data.value);
-          console.log("Second Largest val" + secondLargest.data.value);
         }
       }
     }
 
     if(secondLargest != null) {
       secondLargest.freeze();
-      console.log("FREEZING SECOND LARGEST " + secondLargest.data.value)
-    } 
+    } else if(largest != null){
+      largest.freeze();
+    }
   }
 
 }

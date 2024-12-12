@@ -34,12 +34,24 @@ const User = mongoose.model('User', userSchema);
 
 const Score = mongoose.model('Score', scoreSchema);
 
+/*
+ * NOTE: I created this schema for representing 
+ * game boards in the DB for attacking purposes
+ *
+ * - Eddie
+ */
+const tileSchema = new mongoose.Schema({
+    value: Number,
+    frozen: false
+})
+
+const Boards = mongoose.model('Boards', tileSchema);
 const gameSchema = new mongoose.Schema({
   userID: mongoose.Schema.Types.ObjectId,
   scoreID: mongoose.Schema.Types.ObjectId,
   username: String,
   score: String,
-  board: [Number],
+  board: [tileSchema],
   startTime: Date,
   endTime: Date,
   winTime: Date
@@ -79,21 +91,25 @@ app.post("/createuser", async (req, res) => {
   }
 });
 
-app.get("/attacked", async (req, res) => {
+/*
+  * NOTE: I was going to use this to attack the other player but didnt 
+  * complete it all the way
+  *
+  * - Eddie
+  */
+app.get("/getUpdatedBoard", async (req, res) => {
   const {
-    frozen
+    username
   } = req.body;
 
   try {
-    const result = await GameLive.findOneAndUpdate(
-      { username },
-      {},
-      { new: true, upsert: true }
+    const result = await GameLive.findOne(
+      { username }
     );
 
     res.status(200).json({
       message: 'Leaderboard updated successfully.',
-      data: result._id
+      data: result.board
     });
   } catch (error) {
         console.error('Error adding user:', error);
@@ -148,6 +164,8 @@ app.post("/leaderboard/live/update", async (req, res) => {
         { new: true, upsert: true }
       );
     }
+
+
 
     res.status(200).json({
       message: 'Leaderboard updated successfully.',

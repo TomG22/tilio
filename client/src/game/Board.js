@@ -4,171 +4,325 @@
  * Description: Represents the 2048 gameboard. Game "backend"/functionality
  */
 
-
+import Tile from './Tile.js';
 
 class Board {
+  /*
+  * constructs a new board object, generating two random tiles 
+  * as in the original game
+  */
   constructor() {
     this.won = false;
+    this.tiles = [];
     for (let row = 0; row < 4; row++) {
       this.tiles[row] = [];
       for (let col = 0; col < 4; col++) {
-        tile[row][col] = new Tile();
+        this.tiles[row][col] = new Tile(0);
       }
     }
+    this.fillRandom();
+    this.fillRandom();
   }
 
+  /*
+  * function called by client frontend to correspond to the user
+  * pressing an up key
+  */
   up(){
-    let hasMerges = true;
+    let movedCount = 0;
 
-    let merged;
-      for (let row = 3; row > 0; row--) {
-        for (let col = 0; col < 4; col++) {
-          let a = this.tiles[row][col];
-          let b = this.tiles[row-1][col];
-          let mergedTile = Tile.merge(a, b);
-          if(mergedTile != 0 && !merged.includes(a) && !merged.includes(b){
-            this.tiles[row][col] = new Tile();
-            this.tiles[row - 1][col] = mergedTile;
-            merged.push(mergedTile);
-            if(merged.value == 2048) {
-             this.won = true;
-            }
-          } else if (b.value == 0) {
-            for (let rowMove = row; rowMove < 4; rowMove++) {
-              this.tiles[rowMove - 1][col] = tile[rowMove][col];
-            }
+    movedCount += this.moveUp();
+    let merged = [];
+    for (let row = 0; row < 3; row++) {
+      for (let col = 0; col < 4; col++) {
+        let a = this.tiles[row][col];
+        let b = this.tiles[row+1][col];
+
+        if (a.data.frozen == true || b.data.frozen == true) {
+          continue;
+        }
+
+        console.log("atile.data.value: " + a.data.value);
+        let mergedTile = Tile.merge(a, b);
+        console.log("merged tile: " + mergedTile);
+        if(mergedTile != null && !merged.includes(a) && !merged.includes(b)){
+          this.tiles[row][col] = mergedTile;
+          this.tiles[row + 1][col] = new Tile(0);
+          merged.push(mergedTile);
+          if(mergedTile.data.value == 2048) {
+            this.won = true;
           }
         }
       }
-    if(merged.length > 0) {
-      fillRandom();
     }
+    movedCount += this.moveUp();
+    console.log("hasMoved" + movedCount);
+    if(movedCount > 0) {
+      console.log("Called fill random");
+      this.fillRandom();
+    }
+    console.log("Won: " + this.won);
+    console.log("Lost: " + this.#gameLost());
   }
 
+  /*
+   * helper method that moves all tiles in the board to the northern
+   * most position
+   */
+  moveUp() {
+    let result = 0;
+    for (let col = 0; col < 4; col++) {
+      for(let row = 1; row < 4; row++) {
+        // iterate over all previous rows
+        for (let prevRow = row -1; prevRow >= 0; prevRow--) {
+          // if the previous row has an empty.data.value, swap with the prev + 1 row
+          if (this.tiles[prevRow][col].data.value == 0 && this.tiles[prevRow+1][col].data.value != 0) {
+            if(this.tiles[prevRow][col].data.frozen || this.tiles[prevRow+1][col].data.frozen) {
+              continue;
+            }
+            this.tiles[prevRow][col] = this.tiles[prevRow + 1][col]
+            this.tiles[prevRow + 1][col] = new Tile(0);
+            console.log("MOVING UP");
+            result += 1;
+          }
+        }
+      }
+    }
+    return result;
+  }
+
+  /*
+  * function called by client frontend to correspond to the user
+  * pressing an down key
+  */
   down() {
-    let hasMerges = true;
+    let movedCount = 0;
 
-    let merged;
-      for (let row = 0; row < 3; row++) {
-        for (let col = 0; col < 4; col++) {
-          let a = this.tiles[row][col];
-          let b = this.tiles[row+1][col];
-          let mergedTile = Tile.merge(a, b);
-          if(mergedTile != 0 && !merged.includes(a) && !merged.includes(b){
-            this.tiles[row][col] = new Tile();
-            this.tiles[row + 1][col] = mergedTile;
-            merged.push(mergedTile);
+    let merged = [];
+    movedCount += this.moveDown();
+    for (let row = 3; row > 0; row--) {
+      for (let col = 0; col < 4; col++) {
+        let a = this.tiles[row][col];
+        let b = this.tiles[row-1][col];
 
-            if(merged.value == 2048) {
-             this.won = true;
-            }
-          } else if (b.value == 0) {
-            for (let rowMove = row; rowMove >= 0; rowMove--) {
-              this.tiles[rowMove + 1][col] = tile[rowMove][col];
-            }
+        if (a.data.frozen == true || b.data.frozen == true) {
+          continue;
+        }
+
+        console.log("atile.data.value: " + a.data.value);
+        let mergedTile = Tile.merge(a, b);
+        console.log("merged tile: " + mergedTile);
+        if(mergedTile != null && !merged.includes(a) && !merged.includes(b)){
+          this.tiles[row][col] = mergedTile;
+          this.tiles[row - 1][col] = new Tile(0);
+          merged.push(mergedTile);
+          if(mergedTile.data.value == 2048) {
+            this.won = true;
           }
         }
       }
-    if(merged.length > 0) {
-      fillRandom();
     }
+    movedCount += this.moveDown();
+    if(movedCount > 0) {
+      console.log("Called fill random");
+      this.fillRandom();
+    }
+    console.log("Won: " + this.won);
+    console.log("Lost: " + this.#gameLost());
   }
 
-  left() {
-    // TODO:
-
-    let hasMerges = true;
-
-    let merged;
-      for (let col = 4; col > 0; col--) {
-        for (let row = 0; row < 4; row++) {
-          let a = this.tiles[row][col];
-          let b = this.tiles[row][col-1];
-          let mergedTile = Tile.merge(a, b);
-          if(mergedTile != 0 && !merged.includes(a) && !merged.includes(b)){
-            this.tiles[row][col] = new Tile();
-            this.tiles[row][col - 1] = mergedTile;
-            merged.push(mergedTile);
-
-            if(merged.value == 2048) {
-             this.won = true;
+  /*
+   * helper method that moves all tiles in the board to the southern 
+   * most position
+   */
+  moveDown() {
+    let result = 0;
+    for (let col = 0; col < 4; col++) {
+      for(let row = 2; row >= 0; row--) {
+        // iterate over all previous rows
+        for (let prevRow = row +1; prevRow < 4; prevRow++) {
+          // if the previous row has an empty.data.value, swap with the prev + 1 row
+          if (this.tiles[prevRow][col].data.value == 0 && this.tiles[prevRow-1][col].data.value != 0) {
+            if(this.tiles[prevRow][col].data.frozen || this.tiles[prevRow-1][col].data.frozen) {
+              continue;
             }
-          } else if (b.value == 0) {
-            for (let colMove = col; colMove >= 0; colMove++) {
-              this.tiles[row][colMove + 1] = tile[row][colMove];
-            }
+            this.tiles[prevRow][col] = this.tiles[prevRow -1][col]
+            this.tiles[prevRow - 1][col] = new Tile(0);
+            result += 1;
           }
         }
       }
-    if(merged.length > 0) {
-      fillRandom();
     }
+    return result;
   }
 
-  right() {
-    // TODO:
+  /*
+  * function called by client frontend to correspond to the user
+  * pressing a left key
+  */
+  left(){
+    let movedCount = 0;
 
-    let hasMerges = true;
+    this.movedCount += this.moveLeft();
+    let merged = [];
+    for (let col = 0; col < 3; col++) {
+      for (let row = 0; row < 4; row++) {
+        let a = this.tiles[row][col];
+        let b = this.tiles[row][col+1];
 
-    let merged;
-      for (let col = 0; col < 3; col++) {
-        for (let row = 0; row < 4; row++) {
-          let a = this.tiles[row][col];
-          let b = this.tiles[row][col+1];
-          let mergedTile = Tile.merge(a, b);
-          if(mergedTile != 0 && !merged.includes(a) && !merged.includes(b)){
-            this.tiles[row][col] = new Tile();
-            this.tiles[row][col + 1] = mergedTile;
-            merged.push(mergedTile);
+        if (a.data.frozen == true || b.data.frozen == true) {
+          continue;
+        }
 
-            if(merged.value == 2048) {
-             this.won = true;
-            }
-          } else if (b.value == 0) {
-            for (let colMove = col; colMove >= 0; colMove--) {
-              this.tiles[row][colMove - 1] = tile[row][colMove];
-            }
+        console.log("atile.data.value: " + a.data.value);
+        let mergedTile = Tile.merge(a, b);
+        console.log("merged tile: " + mergedTile);
+        if(mergedTile != null && !merged.includes(a) && !merged.includes(b)){
+          this.tiles[row][col] = mergedTile;
+          this.tiles[row][col+1] = new Tile(0);
+          merged.push(mergedTile);
+          if(mergedTile.data.value == 2048) {
+            this.won = true;
           }
         }
       }
-    if(merged.length > 0) {
-      fillRandom();
     }
+    movedCount += this.moveLeft();
+    console.log("merge length" + merged.length);
+    if(movedCount > 0) {
+      console.log("Called fill random");
+      this.fillRandom();
+    }
+    console.log("Won: " + this.won);
+    console.log("Lost: " + this.#gameLost());
   }
 
-  gameLost() {
-    if(!isFull()) {
+  /*
+   * helper method that moves all tiles in the board to the western 
+   * most position
+   */
+  moveLeft() {
+    let result = 0;
+    for (let col = 1; col < 4; col++) {
+      for(let row = 0; row < 4; row++) {
+        // iterate over all previous rows
+        for (let prevCol = col -1; prevCol >= 0; prevCol--) {
+          // if the previous row has an empty.data.value, swap with the prev + 1 row
+          if (this.tiles[row][prevCol].data.value == 0 && this.tiles[row][prevCol+1].data.value != 0) {
+              if(this.tiles[row][prevCol].data.frozen || this.tiles[row][prevCol+1].data.frozen) {
+                continue;
+              }
+            this.tiles[row][prevCol] = this.tiles[row][prevCol+1];
+            this.tiles[row][prevCol+1] = new Tile(0);
+            result += 1;
+          }
+        }
+      }
+    }
+    return result;
+  }
+  /*
+  * function called by client frontend to correspond to the user
+  * pressing a right key
+  */
+  right(){
+    let movedCount = 0;
+
+    movedCount += this.moveRight();
+    let merged = [];
+    for (let col = 3; col > 0; col--) {
+      for (let row = 0; row < 4; row++) {
+        let a = this.tiles[row][col];
+        let b = this.tiles[row][col-1];
+
+        if (a.data.frozen == true || b.data.frozen == true) {
+          continue;
+        }
+
+        console.log("atile.data.value: " + a.data.value);
+        let mergedTile = Tile.merge(a, b);
+        console.log("merged tile: " + mergedTile);
+        if(mergedTile != null && !merged.includes(a) && !merged.includes(b)){
+          this.tiles[row][col] = mergedTile;
+          this.tiles[row][col-1] = new Tile(0);
+          merged.push(mergedTile);
+          if(mergedTile.data.value == 2048) {
+            this.won = true;
+          }
+        }
+      }
+    }
+    movedCount += this.moveRight();
+    console.log("merge length" + merged.length);
+    if(movedCount > 0) {
+      console.log("Called fill random");
+      this.fillRandom();
+    }
+    console.log("Won: " + this.won);
+    console.log("Lost: " + this.#gameLost());
+  }
+
+  /*
+   * helper method that moves all tiles in the board to the eastern 
+   * most position
+   */
+  moveRight() {
+    let result = 0;
+    for (let col = 2; col >= 0; col--) {
+      for(let row = 0; row < 4; row++) {
+        // iterate over all previous rows
+        for (let prevCol = col + 1; prevCol < 4; prevCol++) {
+          // if the previous row has an empty.data.value, swap with the prev + 1 row
+          if (this.tiles[row][prevCol].data.value == 0 && this.tiles[row][prevCol-1].data.value != 0) {
+            if(this.tiles[row][prevCol].data.frozen || this.tiles[row][prevCol-1].data.frozen) {
+              continue;
+            }
+            this.tiles[row][prevCol] = this.tiles[row][prevCol-1];
+            this.tiles[row][prevCol-1] = new Tile(0);
+            result += 1;
+          }
+        }
+      }
+    }
+    return result;
+  }
+
+  /*
+  * private helper method used to check if the game was lost
+  */
+  #gameLost() {
+    if(!this.#isFull()) {
       return false;
     }
     for (let row = 0; row < 4; row++) {
       for (let col = 0; col < 4; col++) {
         let curTile = this.tiles[row][col];
 
-        if(curTile.value = 0) {
+        if(curTile.data.value == 0) {
           return false;
         }
 
         if (row - 1 >= 0) {
           let upNeighbor = this.tiles[row-1][col];
-          if (aTile.value == upNeighbor.value) {
+          if (curTile.data.value == upNeighbor.data.value) {
             return false;
           }
         }
         if (row + 1 < 4) {
           let downNeighbor = this.tiles[row+1][col];
-          if (aTile.value == downNeighbor.value) {
+          if (curTile.data.value == downNeighbor.data.value) {
             return false;
           }
         }
         if (col - 1 >= 0) {
           let leftNeighbor = this.tiles[row][col-1];
-          if (aTile.value == leftNeighbor.value) {
+          if (curTile.data.value == leftNeighbor.data.value) {
             return false;
           }
         }
         if (col + 1 < 4) {
           let rightNeighbor = this.tiles[row][col+1];
-          if (aTile.value == rightNeighbor.value) {
+          if (curTile.data.value == rightNeighbor.data.value) {
             return false;
           }
         }
@@ -177,36 +331,49 @@ class Board {
     return true;
   }
 
-  getBoard() {
-    return this.tiles;
-  }
-
+  /*
+  * isFull is a private helper method to check if the board is full
+  */
   #isFull() {
-    for (let aTile in this.tiles) {
-      if(aTile.value == 0) {
-        return false;
+    for (let row = 0; row < 4; row++) {
+      for (let col = 0; col < 4; col++) {
+        if(this.tiles[row][col].data.value == 0) {
+          return false;
+        }
       }
     }
 
     return true;
   }
 
-  #fillRandom() {
+
+  /*
+  * fillRandom creates a new Tile with a value of 1 or 2
+  * and places it in an random empty index of the board
+  *
+  * will produce a 2 Tile 90% of the time and a 4 Tile 
+  * the other 10%
+  */
+  fillRandom() {
     const min = 0;
     const max = 3;
 
     let row;
     let col;
 
+    if(this.isFull) {
+      return;
+    }
+
     do {
-      let row = Math.floor(Math.random() * (max - min + 1)) + min;
-      let col = Math.floor(Math.random() * (max - min + 1)) + min;
-    } while (this.tiles[row][col].value != 0);
+      row = Math.floor(Math.random() * (max - min + 1)) + min;
+      col = Math.floor(Math.random() * (max - min + 1)) + min;
+    } while (this.tiles[row][col].data.value !== 0);
     
     const chooseTile = Math.random();
-    const tileVal;
+    let tileVal;
 
-    if (chooseTile > 0.90) {
+    if (chooseTile >= 0.90) {
       tileVal = 4;
     } else  {
       tileVal = 2;
@@ -214,6 +381,41 @@ class Board {
 
     this.tiles[row][col] = new Tile(tileVal);
   }
-}
 
+  /*
+  * freezes the second largest tile in the gameboard for 30
+  * seconds
+  */
+  freezeTile() {
+    let largest = null;
+    let secondLargest = null;
+
+    for (let row = 0; row < 4; row++) {
+      for(let col = 0; col < 4; col++) {
+        let aTile = this.tiles[row][col];
+        if (largest == null ) {
+          largest = aTile;
+          continue;
+        } else if (secondLargest == null && aTile.data.value <= largest.data.value) {
+          secondLargest = aTile;
+          continue;
+        }
+
+        if(aTile.data.value > largest.data.value) {
+          secondLargest = largest;
+          largest = aTile;
+        } else if (secondLargest != null && aTile.data.value > secondLargest.data.value) {
+          secondLargest = aTile;
+        }
+      }
+    }
+
+    if(secondLargest != null) {
+      secondLargest.freeze();
+    } else if(largest != null){
+      largest.freeze();
+    }
+  }
+
+}
 export default Board;
