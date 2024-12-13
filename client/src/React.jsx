@@ -6,16 +6,17 @@
  */
 
 import './React.css';
+import Board from './Board.js'
 import React, {useState, useRef, useEffect} from 'react';
 
 let userID;
 let username;
 
-function Header({children}) {
+function HeaderUI({children}) {
   return <div className="Header">{children}</div>;
 }
 
-function Button({className, children}) {
+function ButtonUI({className, children}) {
   //const [count, setCount] = useState(0);
   return (
     <div className="ButtonContainer">
@@ -24,30 +25,39 @@ function Button({className, children}) {
   );
 }
 
-function Board() {
+function BoardUI() {
+  const [board, setBoard] = useState(new Board());
+
+  // Handler for when the board changes
+  useEffect(() => {
+
+  }, [board]);
+
+  const tiles = board.getTiles(); // Get tiles from the Board instance
+  console.log(board.toString());
   return (
     <div className="Board">
-      <Tile value="2" data-row="0" data-col="1"/>
-      <Tile value="2" data-row="0" data-col="2"/>
-      <Tile value="10" data-row="0" data-col="3"/>
-      <Tile value="100" data-row="0" data-col="4"/>
-      <Tile value="2000" data-row="1" data-col="1"/>
-      <Tile value="10000" data-row="1" data-col="2"/>
-      <Tile value="100000" data-row="1" data-col="3"/>
-      <Tile value="1000000" data-row="1" data-col="4"/>
-      <Tile value="10000000" data-row="2" data-col="1"/>
-      <Tile value="100000000" data-row="2" data-col="2"/>
-      <Tile value="2" data-row="2" data-col="3"/>
-      <Tile value="2" data-row="2" data-col="4"/>
-      <Tile value="2" data-row="3" data-col="1"/>
-      <Tile value="2" data-row="3" data-col="2"/>
-      <Tile value="2" data-row="3" data-col="3"/>
-      <Tile value="2" data-row="3" data-col="4"/>
+      <TileUI value="2" data-row="0" data-col="1"/>
+      <TileUI value="2" data-row="0" data-col="2"/>
+      <TileUI value="10" data-row="0" data-col="3"/>
+      <TileUI value="100" data-row="0" data-col="4"/>
+      <TileUI value="2000" data-row="1" data-col="1"/>
+      <TileUI value="10000" data-row="1" data-col="2"/>
+      <TileUI value="100000" data-row="1" data-col="3"/>
+      <TileUI value="1000000" data-row="1" data-col="4"/>
+      <TileUI value="10000000" data-row="2" data-col="1"/>
+      <TileUI value="100000000" data-row="2" data-col="2"/>
+      <TileUI value="2" data-row="2" data-col="3"/>
+      <TileUI value="2" data-row="2" data-col="4"/>
+      <TileUI value="2" data-row="3" data-col="1"/>
+      <TileUI value="2" data-row="3" data-col="2"/>
+      <TileUI value="2" data-row="3" data-col="3"/>
+      <TileUI value="2" data-row="3" data-col="4"/>
     </div>
   )
 }
 
-function Tile({ value }) {
+function TileUI({ value }) {
   const selfRef = useRef(null);
   const [textSize, setTextSize] = useState(0);
 
@@ -75,20 +85,20 @@ function Tile({ value }) {
   return <button ref={selfRef} className="Tile" style={{ fontSize: textSize }}>{value}</button>;
 }
 
-function Leaderboard({name, id}) {
+function LeaderboardUI({name, id}) {
   return (
     <div className="Leaderboard" id={id}>
       {name}
-      <Score username="Player" score="9999" />
-      <Score username="Player" score="9999" />
-      <Score username="Player" score="9999" />
-      <Score username="Player" score="9999" />
-      <Score username="Player" score="9999" />
+      <ScoreUI username="Player" score="9999" />
+      <ScoreUI username="Player" score="9999" />
+      <ScoreUI username="Player" score="9999" />
+      <ScoreUI username="Player" score="9999" />
+      <ScoreUI username="Player" score="9999" />
     </div>
   );
 }
 
-function Score({username, score}) {
+function ScoreUI({username, score}) {
   return (
   <div className="Score">
     <div className="UsernameLabel">
@@ -104,19 +114,19 @@ function Score({username, score}) {
 function App() {
   return (
     <div className="App">
-      <Header>Header</Header>
-      <Board />
-      <Button className="Username">Username</Button>
-      <Button className="Play">Play</Button>
-      <Leaderboard name="High Score" id="scoresLB"/>
-      <Leaderboard name="Fastest 2048" id="timesLB"/>
-      <Leaderboard name="Live Leaderboard" id="liveLB"/>
+      <HeaderUI>Header</HeaderUI>
+      <BoardUI />
+      <ButtonUI className="Username">Username</ButtonUI>
+      <ButtonUI className="Play">Play</ButtonUI>
+      <LeaderboardUI name="High Score" id="scoresLB"/>
+      <LeaderboardUI name="Fastest 2048" id="timesLB"/>
+      <LeaderboardUI name="Live Leaderboard" id="liveLB"/>
     </div>
   );
 }
 
 export default App;
-
+/*
 await fetchLiveLeaderboard();
 async function fetchLiveLeaderboard () {
     await fetch('http://localhost:3000/leaderboard/live')
@@ -254,3 +264,4 @@ async function createUser({username}) {
       console.error(error);
   }
 }
+*/
