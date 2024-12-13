@@ -110,6 +110,7 @@ function BoardUI() {
   const tiles = board.getTiles(); // Get tiles from the board instance
   return (
     <div className="Board">
+      <div className="BoardScoreLabel">Score: {score}</div> 
       {tiles.map((row, rowIndex) => (
         row.map((tile, colIndex) => (
           <TileUI

@@ -158,6 +158,13 @@ div, button {
   border: none;
 }
 
+.BoardScoreLabel {
+  position: absolute;
+  font-size: 25pt;
+  top: -34pt;
+  left: 5%;
+}
+
 .Leaderboard {
   position: fixed;
   width: 20vw;
