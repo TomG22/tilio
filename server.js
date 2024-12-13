@@ -148,6 +148,11 @@ app.post("/leaderboard/live/update", async (req, res) => {
     const result = await GameLive.findOneAndUpdate(
       { username },
       { score, updatedAt: Date.now() },
+      { board },
+      { startTime },
+      { lastMove },
+      { endTime },
+      { winTime },
       { new: true, upsert: false }
     );
 
