@@ -18,22 +18,6 @@ mongoose.connect('mongodb://localhost:27017/mernstack', {
 .then(() => console.log('MongoDB connected'))
 .catch(err => console.log(err));
 
-const userSchema = new mongoose.Schema({
-  username: {type: String,  required: true},
-  allTimeHighScore: {type: Number, required: true}
-  
-});
-
-const scoreSchema = new mongoose.Schema({
-  score: {type: String,  required: true},
-  time: {type: Date, required: true}
-  
-});
-
-const User = mongoose.model('User', userSchema);
-
-const Score = mongoose.model('Score', scoreSchema);
-
 /*
  * NOTE: I created this schema for representing 
  * game boards in the DB for attacking purposes
@@ -45,22 +29,27 @@ const tileSchema = new mongoose.Schema({
   frozen: { type: Boolean, default: false }
 });
 
-const Boards = mongoose.model('Boards', tileSchema);
+const LiveBoards = mongoose.model('LiveBoards', tileSchema);
+
 const gameSchema = new mongoose.Schema({
-  userID: mongoose.Schema.Types.ObjectId,
-  scoreID: mongoose.Schema.Types.ObjectId,
   username: String,
   score: String,
   board: [tileSchema],
   startTime: Date,
+  lastMove: Date,
   endTime: Date,
   winTime: Date
-})
+});
 
-
-const GameStatic = mongoose.model('GameStatic', gameSchema);
+const gameOverSchema = new mongoose.Schema({
+  username: String,
+  score: String,
+  winTime: Number 
+});
 
 const GameLive = mongoose.model('GameLive', gameSchema);
+
+const GameStatic = mongoose.model('GameStatic', gameOverSchema);
 
 app.use(express.static(path.join(__dirname, 'client/build')));
 
@@ -117,6 +106,9 @@ app.get("/getUpdatedBoard", async (req, res) => {
   }
 });
 
+/*
+ * Allows client to get static leaderboard
+ */
 app.get("/leaderboard/static", async (req, res) => {
   try {
     console.log("Got the static get")
@@ -127,6 +119,9 @@ app.get("/leaderboard/static", async (req, res) => {
   }
 });
 
+/*
+  * Allows client to get live leaderboard
+  */
 app.get("/leaderboard/live", async (req, res) => {
   try {
     const leaderboard = await GameLive.find().sort({ score: 1});
@@ -136,36 +131,49 @@ app.get("/leaderboard/live", async (req, res) => {
   }
 });
 
+/*
+  * Allows client to update their score in the leaderboard
+  */
 app.post("/leaderboard/live/update", async (req, res) => {
   const  { username,
-           score,
-           endTime,
-           winTime,
-           board
+            score,
+            board,
+            startTime,
+            lastMove,
+            endTime,
+            winTime
           } = req.body;
 
   try {
     const result = await GameLive.findOneAndUpdate(
       { username },
       { score, updatedAt: Date.now() },
-      { new: true, upsert: true }
+      { new: true, upsert: false }
     );
 
-    if (winTime != 0) {
+    /*
+      * if game is over, update the static leaderboard
+      *
+      * game over is denoted by an nonzero endTime
+      */
+    if (endTime != 0) {
       await GameStatic.findOneAndUpdate(
         { username },
         {
             score,
-            endTime,
-            winTime,
-            board,
-            updatedAt: Date.now(),
+            winTime
         },
         { new: true, upsert: true }
       );
+
+      await GameLive.deleteOne({ username });
+
+      res.status(200).json({
+        message: 'Removed from live leaderboard.',
+        data: result
+      });
+      return;
     }
-
-
 
     res.status(200).json({
       message: 'Leaderboard updated successfully.',
