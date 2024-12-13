@@ -143,7 +143,7 @@ function TileUI({tile}) {
       // Cleanup the listener when the object is unmounted
       window.removeEventListener('resize', rescaleText);
     };
-  }, [tile.data.moveDir]);
+  }, [tile.data.value, tile.data.moveDir]);
 
   const tileStyle = {
     fontSize: `${textSize}px`,

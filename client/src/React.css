@@ -101,7 +101,7 @@ div, button {
   margin: 5%;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: clip;
   background-color: var(--pri-color);
   border: none;
 }
