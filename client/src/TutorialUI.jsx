@@ -14,7 +14,8 @@ function TutorialUI() {
                     <strong>Score Points:</strong> Your score increases as you merge tiles.
                 </li>
                 <li>
-                    <strong>Multiplayer Attacks:</strong> Earn points to send attacks to other players! Attacks freeze their tiles for a limited time.
+                    <strong>Multiplayer Attacks:</strong> Earn points to send attacks to other players! Starting at 2000, each attack will be sent each time you double your score! (i.e. 4000, 8000, ...).
+                    Attacks freeze the second-highest tile of the player above you for 30 seconds.
                 </li>
                 <li>
                     <strong>Objective:</strong> Reach the 2048 tile and beyond. Compete to get the highest score or the fastest 2048!

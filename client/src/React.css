@@ -77,8 +77,13 @@ div, button {
 }
 
 #TutorialButton {
-  left: 50vw;
-  bottom: 6vh;
+  left: 94.5vw;
+  bottom: 0vh;
+}
+
+#TutorialButton * {
+  border-radius: 0px;
+  border-top-left-radius: 20px;
 }
 
 #UsernameLabel {
@@ -223,12 +228,12 @@ div, button {
   }
 }
 
-tutorial
+/* tutorial */
 .Tutorial {
   padding: 20px;
   text-align: center;
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
+  /* background-color: #f9f9f9;
+  border: 1px solid #ddd; */
   border-radius: 10px;
   width: 60%;
   margin: 20px auto;

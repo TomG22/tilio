@@ -34,7 +34,6 @@ const winnersSchema = new mongoose.Schema ({
 const gameSchema = new mongoose.Schema({
   username: String,
   score: String,
-  board: [tileSchema],
   startTime: Date,
   lastMove: Date,
   endTime: Date,
