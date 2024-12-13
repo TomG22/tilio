@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const cors = require('cors');
+const { start } = require('repl');
 
 const app = express();
 const PORT = 3000;
@@ -148,6 +149,9 @@ app.post("/leaderboard/live/update", async (req, res) => {
     const result = await GameLive.findOneAndUpdate(
       { username },
       { score, updatedAt: Date.now() },
+      { board },
+      { startTime },
+      { lastMove },
       { new: true, upsert: false }
     );
 
@@ -184,6 +188,51 @@ app.post("/leaderboard/live/update", async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
   }
 });
+
+
+// check if the player is under attack
+app.get('/checkAttack', async (req, res) => {
+  const {username } = req.query;
+  try {
+    const player = await GameLive.findOne({ username });
+    if (!player) {
+      return res.status(404).json({ message: 'Player not found'});
+    }
+    if (player.pendingAttack) {
+      player.pendingAttack = false;
+      await player.save()
+
+      return res.status(200).json({ isAttacked: true });
+    }
+    return res.status(200).json({ isAttacked: false });
+  } catch (error) {
+    console.error("Error checking for attack: ", error);
+    res.status(500).json({ message: 'Internal Server Error'});
+  }
+});
+
+app.post('/attack', async (req, res) => {
+  const { username, score } = req.body;
+
+  try {
+    const leaderboard = await GameLive.find().sort({ score: -1 });
+    const attackerIndex = leaderboard.findIndex(player => player.username === username);
+
+    if (attacker === - 1 || attackerIndex === 0) {
+      return res.status(400).json({ message: 'Cannot attack; no valid target above you.'});
+    }
+    const target = leaderboard[attackerIndex - 1];
+    target.pendingAttack = true;
+    await target.save();
+
+    return res.status(200).json({ message: 'Attack sent to next user' });
+  } catch (error) {
+    console.error("Error initiating attack: " + error);
+    res.status(500).json({ message: 'Internal Server Error'});
+  }
+});
+
+
 
 // Start the server
 app.listen(PORT, () => {

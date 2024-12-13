@@ -27,6 +27,7 @@ function TileUI({ tile }) {
   const tileStyle = {
     fontSize: `${textSize}px`,
     visibility: tile.data.value === 0 ? 'hidden' : 'visible',
+    backgroundColor: tile.data.frozen ? 'rgba(255, 0, 0, 0.5)' : '', // Highlight frozen tiles
   };
 
   return <button ref={selfRef} className="Tile" style={tileStyle}>{tile.data.value}</button>;

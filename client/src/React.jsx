@@ -68,7 +68,7 @@ function App() {
 }
 
 export default App;
-/*
+
 await fetchLiveLeaderboard();
 async function fetchLiveLeaderboard () {
     await fetch('http://localhost:3000/leaderboard/live')
@@ -207,4 +207,3 @@ async function createUser({username}) {
       console.error(error);
   }
 }
-*/

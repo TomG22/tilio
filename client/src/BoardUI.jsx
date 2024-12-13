@@ -9,14 +9,16 @@ function BoardUI() {
   const checkForAttack = async () => {
     try {
       const response = await fetch('http://localhost:3000/checkAttack', { 
+        // TODO: Replace with server URL
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
-      if (!response.ok) throw new Error('Error checking attack');
       const data = await response.json();
+      console.log('data: ' + data);
+      if (!response.ok) throw new Error('Error checking attack');
       if (data.isAttacked) {
         board.freezeTile(data.targetTile); // Handle freezing
-        setBoard(new Board(board)); // Trigger re-render with updated board state
+        // setBoard(new Board(board)); // Trigger re-render with updated board state
       }
     } catch (error) {
       console.error('Error checking for attack:', error);
@@ -46,7 +48,9 @@ function BoardUI() {
     }
     setBoard(new Board(board)); // Update state with new board instance
     setScore(board.getScore()); // Update score
+    console.log(board.getScore());
     checkAttackTrigger(); // Check if a new attack should be triggered
+    checkForAttack();
   }
 
   const checkAttackTrigger = () => {
