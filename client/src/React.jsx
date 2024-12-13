@@ -6,8 +6,9 @@
  */
 
 import './React.css';
-import BoardUI from './BoardUI'
+import BoardUI from './BoardUI';
 import React, {useState, useRef, useEffect} from 'react';
+import TutorialUI from './TutorialUI';
 
 let userID;
 let username;
@@ -58,6 +59,7 @@ function App() {
   const showLB = () => setCurrentScreen('Leaderboards');
   const showMP = () => setCurrentScreen('Multiplayer');
   const showPractice = () => setCurrentScreen('Practice');
+  const showTutorial = () => setCurrentScreen('Tutorial');
 
   console.log(currentScreen);
   return (
@@ -68,6 +70,7 @@ function App() {
           <ButtonUI id="SPButton" onClick={showPractice}>Practice</ButtonUI>
           <ButtonUI id="MPButton" onClick={showMP}>Multiplayer</ButtonUI>
           <ButtonUI id="LBButton" onClick={showLB}>Leaderboards</ButtonUI>
+          <ButtonUI id="TutorialButton" onClick={showTutorial}>Tutorial</ButtonUI>
         </>
       )}
 
@@ -90,6 +93,13 @@ function App() {
       {currentScreen === 'Practice' && (
         <>
           <BoardUI />
+          <ButtonUI id="Back" onClick={showHome}>Back to Menu</ButtonUI>
+        </>
+      )}
+
+      {currentScreen === 'Tutorial' && (
+        <>
+          <TutorialUI />
           <ButtonUI id="Back" onClick={showHome}>Back to Menu</ButtonUI>
         </>
       )}

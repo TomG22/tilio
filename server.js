@@ -39,7 +39,8 @@ const gameSchema = new mongoose.Schema({
   startTime: Date,
   lastMove: Date,
   endTime: Date,
-  winTime: Date
+  winTime: Date,
+  pendingAttack: { type: Boolean, default: false },
 });
 
 const gameOverSchema = new mongoose.Schema({
@@ -218,7 +219,7 @@ app.get('/checkAttack', async (req, res) => {
 app.post('/attack', async (req, res) => {
   const { username, score } = req.body;
 
-  console.log("Received attack request:", { username, score }); // Log input
+  // console.log("Received attack request:", { username, score }); // Log input
 
   try {
     const leaderboard = await GameLive.find().sort({ score: -1 });
@@ -227,7 +228,7 @@ app.post('/attack', async (req, res) => {
     console.log("Attacker Index:", attackerIndex); // Log attacker index
 
 
-    if (attacker === - 1 || attackerIndex === 0) {
+    if (attackerIndex === - 1 || attackerIndex === 0) {
       return res.status(400).json({ message: 'Cannot attack; no valid target above you.'});
     }
     const target = leaderboard[attackerIndex - 1];
@@ -237,7 +238,7 @@ app.post('/attack', async (req, res) => {
     return res.status(200).json({ message: 'Attack sent to next user' });
   } catch (error) {
     console.error("Error initiating attack: " + error);
-    res.status(500).json({ message: 'Internal Server Error'});
+    res.status(500).json({ message: 'MEOW'});
   }
 });
 
