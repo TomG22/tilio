@@ -9,6 +9,7 @@ import './React.css';
 import React, {useState, useRef, useEffect} from 'react';
 
 let userID;
+let username;
 
 function Header({children}) {
   return <div className="Header">{children}</div>;
