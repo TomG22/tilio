@@ -3,6 +3,28 @@
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "mongoose": "^8.8.4",
-    "path": "^0.12.7"
-  }
+    "path": "^0.12.7",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-scripts": "^5.0.1",
+    "web-vitals": "^4.2.4"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "name": "tilio",
+  "description": "",
+  "version": "1.0.0",
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TomG22/tilio.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TomG22/tilio/issues"
+  },
+  "homepage": "https://github.com/TomG22/tilio#readme",
+  "devDependencies": {}
 }
