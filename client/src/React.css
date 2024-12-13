@@ -27,12 +27,14 @@ div, button {
 
 .ButtonContainer {
   position: fixed;
+  background-color: red;
 }
 
 .Button {
-  position: fixed;
+  position: relative;
   background-color: var(--pri-color);
-  font-size: 22pt;
+  height: 10vh;
+  font-size: 30pt;
 }
 
 .Username {
@@ -43,12 +45,20 @@ div, button {
   height: 6vh;
 }
 
-.Play {
-  margin: 78vh 0 0 50vw;
-  transform: translate(-50%, -50%);
-  width: 20vw;
-  height: 10vh;
-  font-size: 30pt;
+#SPButton {
+  margin: 0px;
+}
+
+#MPButton {
+  margin: 0px;
+}
+
+#LBButton {
+  margin: 0px;
+}
+
+#UsernameLabel{
+  right: 0px;
 }
 
 #UsernameFieldLabel {

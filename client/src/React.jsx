@@ -16,11 +16,11 @@ function HeaderUI({children}) {
   return <div className="Header">{children}</div>;
 }
 
-function ButtonUI({className, children}) {
+function ButtonUI({children, id}) {
   //const [count, setCount] = useState(0);
   return (
-    <div className="ButtonContainer">
-      <button className={`Button ${className}`}>{children}</button>
+    <div className="ButtonContainer" id={id}>
+      <button className="Button">{children}</button>
     </div>
   );
 }
@@ -52,7 +52,9 @@ function ScoreUI({username, score}) {
 }
 
 function App() {
-  return (
+  const [currentScreen, setCurrentScreen] = useState('mainMenu'); // Track the active screen (board or leaderboard)
+
+    return (
     <div className="App">
       <HeaderUI>Header</HeaderUI>
       <BoardUI />
