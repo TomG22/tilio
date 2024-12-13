@@ -7,11 +7,12 @@
 import Tile from './Tile.js';
 
 class Board {
-  constructor(existingBoard) {
-    if (existingBoard == null) {
+  constructor(oldBoard) {
+    if (oldBoard == null) {
       // Default constructor: creates a brand new board
       this.won = false;
       this.tiles = [];
+      this.score = 0;
       for (let row = 0; row < 4; row++) {
         this.tiles[row] = [];
         for (let col = 0; col < 4; col++) {
@@ -21,8 +22,9 @@ class Board {
       this.fillRandom();
       this.fillRandom();
     } else {
-      this.won = existingBoard.won;
-      this.tiles = existingBoard.tiles;
+      this.score = oldBoard.score;
+      this.won = oldBoard.won;
+      this.tiles = oldBoard.tiles;
     }
   }
 
@@ -51,6 +53,7 @@ class Board {
           this.tiles[row][col] = mergedTile;
           this.tiles[row + 1][col] = new Tile(0);
           merged.push(mergedTile);
+          this.score += mergedTile.data.value;  // UPDATE SCORE
           if(mergedTile.data.value === 2048) {
             this.won = true;
           }
@@ -118,6 +121,7 @@ class Board {
           this.tiles[row][col] = mergedTile;
           this.tiles[row - 1][col] = new Tile(0);
           merged.push(mergedTile);
+          this.score += mergedTile.data.value;  // UPDATE SCORE
           if(mergedTile.data.value === 2048) {
             this.won = true;
           }
@@ -184,6 +188,7 @@ class Board {
           this.tiles[row][col] = mergedTile;
           this.tiles[row][col+1] = new Tile(0);
           merged.push(mergedTile);
+          this.score += mergedTile.data.value;  // UPDATE SCORE
           if(mergedTile.data.value === 2048) {
             this.won = true;
           }
@@ -250,6 +255,7 @@ class Board {
           this.tiles[row][col] = mergedTile;
           this.tiles[row][col-1] = new Tile(0);
           merged.push(mergedTile);
+          this.score += mergedTile.data.value;  // UPDATE SCORE
           if(mergedTile.data.value === 2048) {
             this.won = true;
           }
@@ -435,6 +441,10 @@ class Board {
       }
     }
     return result;
+  }
+
+  getScore() {
+    return this.score;
   }
 }
 export default Board;

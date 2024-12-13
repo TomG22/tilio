@@ -7,8 +7,6 @@
 
 import './React.css';
 import Board from './Board.js'
-import Tile from './Tile.js'
-
 import React, {useState, useRef, useEffect} from 'react';
 
 let userID;
@@ -29,10 +27,27 @@ function ButtonUI({className, children}) {
 
 function BoardUI() {
   const [board, setBoard] = useState(new Board());
+  const [score, setScore] = useState(0);
 
-  const allTiles = Tile.allTiles;
+  const checkForAttack = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/checkAttack', { 
+        // TODO: CHANGE W SERVER URL + ADD FETCH
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      if (!response.ok) throw new Error('Error checking attack');
+      const data = await response.json();
+      if (data.isAttacked) {
+        board.freezeTile(data.targetTile); // TODO: Handle freezing
+        setBoard(board); // trigger re-render ???
+      }
+    } catch (error) {
+      console.error('Error checking for attack:', error);
+    }
+  };
 
-  function handleKeyPress(event) {
+  function handleMove(event) {
     switch (event.key) {
         case 'ArrowUp':
             if (typeof board.up === 'function') board.up();
@@ -53,23 +68,45 @@ function BoardUI() {
         default:
             return;
     }
+    setBoard(new Board(board)); // update state
+    setScore(board.getScore()); // update score
+    checkAttackTrigger(); // check if a new attack should be sent
+  };
 
-    setBoard(new Board(board));
-  }
+  const checkAttackTrigger = () => {
+    if (score >= 2000 && (Math.log2(score / 2000) % 1 === 0)) {
+      sendAttack();
+    }
+  };
+
+  const sendAttack = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/attack', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ score }),
+      });
+      if (!response.ok) throw new Error('Error sending attack');
+      console.log('attack sent!');
+    } catch (error) {
+      console.error('Error sending attack:', error);
+    }
+  };
+
+  // Handler for when the board changes
   useEffect(() => {
     // Attach the event listener for keydown
-    window.addEventListener('keydown', handleKeyPress);
+    window.addEventListener('keydown', handleMove);
 
     // Cleanup function to remove the event listener when component unmounts
     console.log(board.toString());
     return () => {
-      window.removeEventListener('keydown', handleKeyPress);
+      window.removeEventListener('keydown', handleMove);
     };
   }, [board]);
 
-  const tiles = board.getTiles();
-  //const allTilesArray = Array.from(Tile.allTiles.values());
-
+  const tiles = board.getTiles(); // Get tiles from the Board instance
+  console.log(board.toString());
   return (
     <div className="Board">
       {tiles.map((row, rowIndex) => (
@@ -77,9 +114,6 @@ function BoardUI() {
           <TileUI
             key={tile.id || colIndex}
             tile={tile}
-            //value={tile.data.value}
-            //row={tile.row}
-            //col={tile.col}
           />
         ))
       ))}
@@ -90,8 +124,6 @@ function BoardUI() {
 function TileUI({tile}) {
   const selfRef = useRef(null);
   const [textSize, setTextSize] = useState(0);
-  const [tileSize, setTileSize] = useState(0);
-  const [tileOffset, setTileOffset] = useState({ top: 0, left: 0 });
 
   useEffect(() => {
     const rescaleText = () => {
@@ -102,7 +134,6 @@ function TileUI({tile}) {
         setTextSize((selfRef.current.clientWidth + 20) / 2);
       }
     };
-
     rescaleText();
 
     // Add event listener for window resize
@@ -112,38 +143,9 @@ function TileUI({tile}) {
       // Cleanup the listener when the object is unmounted
       window.removeEventListener('resize', rescaleText);
     };
-  }, [tile]);
-
-  useEffect(() => {
-    const getTileOffset = () => {
-      let realTileSize = selfRef.current.clientWidth;
-      if (selfRef.current == null) {
-        return { top: 0, left: 0 };
-      }
-      let offsetTop = 0;
-      let offsetLeft = 0;
-
-      if (tile.data.moveDir === 'up') {
-        offsetTop -= realTileSize;
-      } else if (tile.data.moveDir === 'down') {
-        offsetTop += realTileSize;
-      } else if (tile.data.moveDir === 'left') {
-        offsetLeft -= realTileSize;
-      } else if (tile.data.moveDir === 'right') {
-        offsetLeft += realTileSize;
-      }
-
-      return { top: offsetTop, left: offsetLeft };
-    };
-    console.log("HI");
-    setTileOffset(getTileOffset());
-  }, [tile.data.moveDir, tileSize]);
+  }, [tile.data.moveDir]);
 
   const tileStyle = {
-    top: `${tileOffset.top}px`,
-    left: `${tileOffset.left}px`,
-    fontSize: `${textSize}px`,
-    transition: true ? 'top 0.3s ease, left 0.3s ease' : 'none',
     visibility: tile.data.value === 0 ? 'hidden' : 'visible'
   };
 
@@ -271,7 +273,8 @@ async function fetchUpdatedBoard () {
         console.error("Error:", error);
     }
 })();
-async function updateLiveLeaderboard( { score, endTime, winTime, board }) {
+async function updateLiveLeaderboard( { 
+score, endTime, winTime, board }) {
   const payload = {
     userID,
     score, 

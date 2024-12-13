@@ -14,10 +14,11 @@ class Board {
   constructor() {
     this.won = false;
     this.tiles = [];
+    this.score = 0;
     for (let row = 0; row < 4; row++) {
       this.tiles[row] = [];
       for (let col = 0; col < 4; col++) {
-        this.tiles[row][col] = new Tile(0);
+        this.tiles[row][col] = new Tile(0, null, null);
       }
     }
     this.fillRandom();
@@ -38,7 +39,7 @@ class Board {
         let a = this.tiles[row][col];
         let b = this.tiles[row+1][col];
 
-        if (a.data.frozen == true || b.data.frozen == true) {
+        if (a.data.frozen === true || b.data.frozen === true) {
           continue;
         }
 
@@ -49,7 +50,8 @@ class Board {
           this.tiles[row][col] = mergedTile;
           this.tiles[row + 1][col] = new Tile(0);
           merged.push(mergedTile);
-          if(mergedTile.data.value == 2048) {
+          this.score += mergedTile.data.value;  // UPDATE SCORE
+          if(mergedTile.data.value === 2048) {
             this.won = true;
           }
         }
@@ -76,7 +78,7 @@ class Board {
         // iterate over all previous rows
         for (let prevRow = row -1; prevRow >= 0; prevRow--) {
           // if the previous row has an empty.data.value, swap with the prev + 1 row
-          if (this.tiles[prevRow][col].data.value == 0 && this.tiles[prevRow+1][col].data.value != 0) {
+          if (this.tiles[prevRow][col].data.value === 0 && this.tiles[prevRow+1][col].data.value !== 0) {
             if(this.tiles[prevRow][col].data.frozen || this.tiles[prevRow+1][col].data.frozen) {
               continue;
             }
@@ -105,7 +107,7 @@ class Board {
         let a = this.tiles[row][col];
         let b = this.tiles[row-1][col];
 
-        if (a.data.frozen == true || b.data.frozen == true) {
+        if (a.data.frozen === true || b.data.frozen === true) {
           continue;
         }
 
@@ -116,7 +118,8 @@ class Board {
           this.tiles[row][col] = mergedTile;
           this.tiles[row - 1][col] = new Tile(0);
           merged.push(mergedTile);
-          if(mergedTile.data.value == 2048) {
+          this.score += mergedTile.data.value;  // UPDATE SCORE
+          if(mergedTile.data.value === 2048) {
             this.won = true;
           }
         }
@@ -142,7 +145,7 @@ class Board {
         // iterate over all previous rows
         for (let prevRow = row +1; prevRow < 4; prevRow++) {
           // if the previous row has an empty.data.value, swap with the prev + 1 row
-          if (this.tiles[prevRow][col].data.value == 0 && this.tiles[prevRow-1][col].data.value != 0) {
+          if (this.tiles[prevRow][col].data.value === 0 && this.tiles[prevRow-1][col].data.value !== 0) {
             if(this.tiles[prevRow][col].data.frozen || this.tiles[prevRow-1][col].data.frozen) {
               continue;
             }
@@ -170,7 +173,7 @@ class Board {
         let a = this.tiles[row][col];
         let b = this.tiles[row][col+1];
 
-        if (a.data.frozen == true || b.data.frozen == true) {
+        if (a.data.frozen === true || b.data.frozen === true) {
           continue;
         }
 
@@ -181,7 +184,8 @@ class Board {
           this.tiles[row][col] = mergedTile;
           this.tiles[row][col+1] = new Tile(0);
           merged.push(mergedTile);
-          if(mergedTile.data.value == 2048) {
+          this.score += mergedTile.data.value;  // UPDATE SCORE
+          if(mergedTile.data.value === 2048) {
             this.won = true;
           }
         }
@@ -208,7 +212,7 @@ class Board {
         // iterate over all previous rows
         for (let prevCol = col -1; prevCol >= 0; prevCol--) {
           // if the previous row has an empty.data.value, swap with the prev + 1 row
-          if (this.tiles[row][prevCol].data.value == 0 && this.tiles[row][prevCol+1].data.value != 0) {
+          if (this.tiles[row][prevCol].data.value === 0 && this.tiles[row][prevCol+1].data.value !== 0) {
               if(this.tiles[row][prevCol].data.frozen || this.tiles[row][prevCol+1].data.frozen) {
                 continue;
               }
@@ -235,7 +239,7 @@ class Board {
         let a = this.tiles[row][col];
         let b = this.tiles[row][col-1];
 
-        if (a.data.frozen == true || b.data.frozen == true) {
+        if (a.data.frozen === true || b.data.frozen === true) {
           continue;
         }
 
@@ -246,7 +250,8 @@ class Board {
           this.tiles[row][col] = mergedTile;
           this.tiles[row][col-1] = new Tile(0);
           merged.push(mergedTile);
-          if(mergedTile.data.value == 2048) {
+          this.score += mergedTile.data.value;  // UPDATE SCORE
+          if(mergedTile.data.value === 2048) {
             this.won = true;
           }
         }
@@ -273,7 +278,7 @@ class Board {
         // iterate over all previous rows
         for (let prevCol = col + 1; prevCol < 4; prevCol++) {
           // if the previous row has an empty.data.value, swap with the prev + 1 row
-          if (this.tiles[row][prevCol].data.value == 0 && this.tiles[row][prevCol-1].data.value != 0) {
+          if (this.tiles[row][prevCol].data.value === 0 && this.tiles[row][prevCol-1].data.value !== 0) {
             if(this.tiles[row][prevCol].data.frozen || this.tiles[row][prevCol-1].data.frozen) {
               continue;
             }
@@ -298,31 +303,31 @@ class Board {
       for (let col = 0; col < 4; col++) {
         let curTile = this.tiles[row][col];
 
-        if(curTile.data.value == 0) {
+        if(curTile.data.value === 0) {
           return false;
         }
 
         if (row - 1 >= 0) {
           let upNeighbor = this.tiles[row-1][col];
-          if (curTile.data.value == upNeighbor.data.value) {
+          if (curTile.data.value === upNeighbor.data.value) {
             return false;
           }
         }
         if (row + 1 < 4) {
           let downNeighbor = this.tiles[row+1][col];
-          if (curTile.data.value == downNeighbor.data.value) {
+          if (curTile.data.value === downNeighbor.data.value) {
             return false;
           }
         }
         if (col - 1 >= 0) {
           let leftNeighbor = this.tiles[row][col-1];
-          if (curTile.data.value == leftNeighbor.data.value) {
+          if (curTile.data.value === leftNeighbor.data.value) {
             return false;
           }
         }
         if (col + 1 < 4) {
           let rightNeighbor = this.tiles[row][col+1];
-          if (curTile.data.value == rightNeighbor.data.value) {
+          if (curTile.data.value === rightNeighbor.data.value) {
             return false;
           }
         }
@@ -337,7 +342,7 @@ class Board {
   #isFull() {
     for (let row = 0; row < 4; row++) {
       for (let col = 0; col < 4; col++) {
-        if(this.tiles[row][col].data.value == 0) {
+        if(this.tiles[row][col].data.value === 0) {
           return false;
         }
       }
@@ -417,5 +422,23 @@ class Board {
     }
   }
 
+  getTiles() {
+    return this.tiles;
+  }
+
+  toString() {
+    let result = "";
+    for (let i = 0; i < 4; i++) {
+      for (let j = 0; j < 4; j++) {
+
+        result += this.tiles[i][j].toString();
+      }
+    }
+    return result;
+  }
+
+  getScore() {
+    return this.score;
+  }
 }
 export default Board;
