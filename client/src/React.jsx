@@ -146,6 +146,7 @@ function TileUI({tile}) {
   }, [tile.data.moveDir]);
 
   const tileStyle = {
+    fontSize: `${textSize}px`,
     visibility: tile.data.value === 0 ? 'hidden' : 'visible'
   };
 
