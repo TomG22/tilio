@@ -211,12 +211,19 @@ app.get('/checkAttack', async (req, res) => {
   }
 });
 
+
+// attempt to send an attack
 app.post('/attack', async (req, res) => {
   const { username, score } = req.body;
 
+  console.log("Received attack request:", { username, score }); // Log input
+
   try {
     const leaderboard = await GameLive.find().sort({ score: -1 });
+    console.log("Leaderboard:", leaderboard); // Log leaderboard
     const attackerIndex = leaderboard.findIndex(player => player.username === username);
+    console.log("Attacker Index:", attackerIndex); // Log attacker index
+
 
     if (attacker === - 1 || attackerIndex === 0) {
       return res.status(400).json({ message: 'Cannot attack; no valid target above you.'});
