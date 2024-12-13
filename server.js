@@ -24,12 +24,11 @@ mongoose.connect('mongodb://localhost:27017/mernstack', {
  *
  * - Eddie
  */
-const tileSchema = new mongoose.Schema({
-  value: { type: Number },
-  frozen: { type: Boolean, default: false }
-});
 
-const LiveBoards = mongoose.model('LiveBoards', tileSchema);
+const winnersSchema = new mongoose.Schema ({
+  username: String,
+  score: String
+})
 
 const gameSchema = new mongoose.Schema({
   username: String,
@@ -50,6 +49,8 @@ const gameOverSchema = new mongoose.Schema({
 const GameLive = mongoose.model('GameLive', gameSchema);
 
 const GameStatic = mongoose.model('GameStatic', gameOverSchema);
+
+const GameWinners = mongoose.model('GameWinners', winnersSchema);
 
 app.use(express.static(path.join(__dirname, 'client/build')));
 
@@ -132,6 +133,18 @@ app.get("/leaderboard/live", async (req, res) => {
 });
 
 /*
+  * Allows client to get Winners leaderboard
+  */
+app.get("/leaderboard/winners", async (req, res) => {
+  try {
+    const leaderboard = await GameWinners.find().sort({ score: 1});
+    res.json(leaderboard);
+  } catch (error){
+
+  }
+});
+
+/*
   * Allows client to update their score in the leaderboard
   */
 app.post("/leaderboard/live/update", async (req, res) => {
@@ -170,6 +183,17 @@ app.post("/leaderboard/live/update", async (req, res) => {
         },
         { new: true, upsert: true }
       );
+
+      if (winTime != '') {
+        await GameLive.findOneAndUpdate(
+          { username },
+          {
+              score,
+              winTime
+          },
+          { new: true, upsert: true }
+        );
+      }
 
       await GameLive.deleteOne({ username });
 

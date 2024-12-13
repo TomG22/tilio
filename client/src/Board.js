@@ -432,6 +432,16 @@ class Board {
     return this.tiles;
   }
 
+  getTilesData() {
+    let result = [];
+    for (let row = 0; row < 4; row++) {
+      for (let col = 0; col < 4; col++) {
+        result.push(this.tiles[row][col].data);
+      }
+    }
+    return result;
+  }
+
   toString() {
     let result = "";
     for (let i = 0; i < 4; i++) {
