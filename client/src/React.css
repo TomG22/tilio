@@ -93,6 +93,7 @@ div, button {
 }
 
 .Tile {
+  position: relative;
   line-height: 20pt;
   border-radius: 10%;
   font-family: Monospace;

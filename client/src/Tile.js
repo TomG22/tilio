@@ -4,7 +4,9 @@
  * Description: Individual tile. "Wrapper" for an int with merge function
  */
 
-class Tile {
+class Tile {  
+  static allTiles = new Map();
+
   // constructs a tile object with its values stored in JSON object
   constructor(value, parent1, parent2) {
     this.data = {
@@ -12,8 +14,12 @@ class Tile {
       frozen: false,
       id: this.newID(),
       parent1: null,
-      parent2: null
+      parent2: null,
+      moveDir: ""
     };
+
+    Tile.allTiles.set(this.data.id, this);
+
 
     if (parent1) {
       this.data.parent1 = parent1;
@@ -23,6 +29,7 @@ class Tile {
       this.data.parent2 = parent2;
     }
   }
+
 
   /**
   * merge returns a new Tile object if the two tile parametes
@@ -56,6 +63,10 @@ class Tile {
     setInterval(() => {
       this.data.frozen = false;
     }, 30000);
+  }
+
+  static getTileById(id) {
+    return Tile.allTiles.get(id);
   }
 
   newID() {

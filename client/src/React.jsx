@@ -7,6 +7,8 @@
 
 import './React.css';
 import Board from './Board.js'
+import Tile from './Tile.js'
+
 import React, {useState, useRef, useEffect} from 'react';
 
 let userID;
@@ -28,46 +30,76 @@ function ButtonUI({className, children}) {
 function BoardUI() {
   const [board, setBoard] = useState(new Board());
 
-  // Handler for when the board changes
-  useEffect(() => {
+  const allTiles = Tile.allTiles;
 
+  function handleKeyPress(event) {
+    switch (event.key) {
+        case 'ArrowUp':
+            if (typeof board.up === 'function') board.up();
+            break;
+        case 'ArrowDown':
+            if (typeof board.down === 'function') board.down();
+            break;
+        case 'ArrowLeft':
+            if (typeof board.left === 'function') board.left();
+            break;
+        case 'ArrowRight':
+            if (typeof board.right === 'function') board.right();
+            break;
+        case " ":
+            console.log("Freezing tile");
+            board.freezeTile();
+            break;
+        default:
+            return;
+    }
+
+    setBoard(new Board(board));
+  }
+  useEffect(() => {
+    // Attach the event listener for keydown
+    window.addEventListener('keydown', handleKeyPress);
+
+    // Cleanup function to remove the event listener when component unmounts
+    console.log(board.toString());
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
   }, [board]);
 
-  const tiles = board.getTiles(); // Get tiles from the Board instance
-  console.log(board.toString());
+  const tiles = board.getTiles();
+  //const allTilesArray = Array.from(Tile.allTiles.values());
+
   return (
     <div className="Board">
-      <TileUI value="2" data-row="0" data-col="1"/>
-      <TileUI value="2" data-row="0" data-col="2"/>
-      <TileUI value="10" data-row="0" data-col="3"/>
-      <TileUI value="100" data-row="0" data-col="4"/>
-      <TileUI value="2000" data-row="1" data-col="1"/>
-      <TileUI value="10000" data-row="1" data-col="2"/>
-      <TileUI value="100000" data-row="1" data-col="3"/>
-      <TileUI value="1000000" data-row="1" data-col="4"/>
-      <TileUI value="10000000" data-row="2" data-col="1"/>
-      <TileUI value="100000000" data-row="2" data-col="2"/>
-      <TileUI value="2" data-row="2" data-col="3"/>
-      <TileUI value="2" data-row="2" data-col="4"/>
-      <TileUI value="2" data-row="3" data-col="1"/>
-      <TileUI value="2" data-row="3" data-col="2"/>
-      <TileUI value="2" data-row="3" data-col="3"/>
-      <TileUI value="2" data-row="3" data-col="4"/>
+      {tiles.map((row, rowIndex) => (
+        row.map((tile, colIndex) => (
+          <TileUI
+            key={tile.id || colIndex}
+            tile={tile}
+            //value={tile.data.value}
+            //row={tile.row}
+            //col={tile.col}
+          />
+        ))
+      ))}
     </div>
   )
 }
 
-function TileUI({ value }) {
+function TileUI({tile}) {
   const selfRef = useRef(null);
   const [textSize, setTextSize] = useState(0);
+  const [tileSize, setTileSize] = useState(0);
+  const [tileOffset, setTileOffset] = useState({ top: 0, left: 0 });
 
   useEffect(() => {
     const rescaleText = () => {
-      if (selfRef.current && value.length !== 1) {
-        // Rescaling the text so larger values appear smaller
-        setTextSize(`${(selfRef.current.clientWidth + 20) / selfRef.current.textContent.length}px`);
-      } else if (selfRef.current && value.length === 1) {
-        setTextSize(`${(selfRef.current.clientWidth + 20) / 2}px`);
+      let charLength = tile.data.value.toString().length;
+      if (selfRef.current && charLength !== 1) {
+        setTextSize((selfRef.current.clientWidth + 20) / charLength);
+      } else if (selfRef.current && charLength === 1) {
+        setTextSize((selfRef.current.clientWidth + 20) / 2);
       }
     };
 
@@ -80,9 +112,42 @@ function TileUI({ value }) {
       // Cleanup the listener when the object is unmounted
       window.removeEventListener('resize', rescaleText);
     };
-  }, [value]);
+  }, [tile]);
 
-  return <button ref={selfRef} className="Tile" style={{ fontSize: textSize }}>{value}</button>;
+  useEffect(() => {
+    const getTileOffset = () => {
+      let realTileSize = selfRef.current.clientWidth;
+      if (selfRef.current == null) {
+        return { top: 0, left: 0 };
+      }
+      let offsetTop = 0;
+      let offsetLeft = 0;
+
+      if (tile.data.moveDir === 'up') {
+        offsetTop -= realTileSize;
+      } else if (tile.data.moveDir === 'down') {
+        offsetTop += realTileSize;
+      } else if (tile.data.moveDir === 'left') {
+        offsetLeft -= realTileSize;
+      } else if (tile.data.moveDir === 'right') {
+        offsetLeft += realTileSize;
+      }
+
+      return { top: offsetTop, left: offsetLeft };
+    };
+    console.log("HI");
+    setTileOffset(getTileOffset());
+  }, [tile.data.moveDir, tileSize]);
+
+  const tileStyle = {
+    top: `${tileOffset.top}px`,
+    left: `${tileOffset.left}px`,
+    fontSize: `${textSize}px`,
+    transition: true ? 'top 0.3s ease, left 0.3s ease' : 'none',
+    visibility: tile.data.value === 0 ? 'hidden' : 'visible'
+  };
+
+  return <button ref={selfRef} className="Tile" style={tileStyle}>{tile.data.value}</button>;
 }
 
 function LeaderboardUI({name, id}) {

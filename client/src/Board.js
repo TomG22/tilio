@@ -7,21 +7,23 @@
 import Tile from './Tile.js';
 
 class Board {
-  /*
-  * constructs a new board object, generating two random tiles 
-  * as in the original game
-  */
-  constructor() {
-    this.won = false;
-    this.tiles = [];
-    for (let row = 0; row < 4; row++) {
-      this.tiles[row] = [];
-      for (let col = 0; col < 4; col++) {
-        this.tiles[row][col] = new Tile(0, null, null);
+  constructor(existingBoard) {
+    if (existingBoard == null) {
+      // Default constructor: creates a brand new board
+      this.won = false;
+      this.tiles = [];
+      for (let row = 0; row < 4; row++) {
+        this.tiles[row] = [];
+        for (let col = 0; col < 4; col++) {
+          this.tiles[row][col] = new Tile(0, null, null);
+        }
       }
+      this.fillRandom();
+      this.fillRandom();
+    } else {
+      this.won = existingBoard.won;
+      this.tiles = existingBoard.tiles;
     }
-    this.fillRandom();
-    this.fillRandom();
   }
 
   /*
@@ -42,9 +44,9 @@ class Board {
           continue;
         }
 
-        console.log("atile.data.value: " + a.data.value);
+        //console.log("atile.data.value: " + a.data.value);
         let mergedTile = Tile.merge(a, b);
-        console.log("merged tile: " + mergedTile);
+        //console.log("merged tile: " + mergedTile);
         if(mergedTile != null && !merged.includes(a) && !merged.includes(b)){
           this.tiles[row][col] = mergedTile;
           this.tiles[row + 1][col] = new Tile(0);
@@ -56,13 +58,13 @@ class Board {
       }
     }
     movedCount += this.moveUp();
-    console.log("hasMoved" + movedCount);
+    //console.log("hasMoved" + movedCount);
     if(movedCount > 0) {
-      console.log("Called fill random");
+      //console.log("Called fill random");
       this.fillRandom();
     }
-    console.log("Won: " + this.won);
-    console.log("Lost: " + this.#gameLost());
+    //console.log("Won: " + this.won);
+    //console.log("Lost: " + this.#gameLost());
   }
 
   /*
@@ -80,9 +82,9 @@ class Board {
             if(this.tiles[prevRow][col].data.frozen || this.tiles[prevRow+1][col].data.frozen) {
               continue;
             }
+            this.tiles[prevRow][col].moveDir = "up";
             this.tiles[prevRow][col] = this.tiles[prevRow + 1][col]
             this.tiles[prevRow + 1][col] = new Tile(0);
-            console.log("MOVING UP");
             result += 1;
           }
         }
@@ -109,9 +111,9 @@ class Board {
           continue;
         }
 
-        console.log("atile.data.value: " + a.data.value);
+        //console.log("atile.data.value: " + a.data.value);
         let mergedTile = Tile.merge(a, b);
-        console.log("merged tile: " + mergedTile);
+        //console.log("merged tile: " + mergedTile);
         if(mergedTile != null && !merged.includes(a) && !merged.includes(b)){
           this.tiles[row][col] = mergedTile;
           this.tiles[row - 1][col] = new Tile(0);
@@ -124,11 +126,11 @@ class Board {
     }
     movedCount += this.moveDown();
     if(movedCount > 0) {
-      console.log("Called fill random");
+      //console.log("Called fill random");
       this.fillRandom();
     }
-    console.log("Won: " + this.won);
-    console.log("Lost: " + this.#gameLost());
+    //console.log("Won: " + this.won);
+    //console.log("Lost: " + this.#gameLost());
   }
 
   /*
@@ -146,6 +148,7 @@ class Board {
             if(this.tiles[prevRow][col].data.frozen || this.tiles[prevRow-1][col].data.frozen) {
               continue;
             }
+            this.tiles[prevRow][col].moveDir = "down";
             this.tiles[prevRow][col] = this.tiles[prevRow -1][col]
             this.tiles[prevRow - 1][col] = new Tile(0);
             result += 1;
@@ -174,9 +177,9 @@ class Board {
           continue;
         }
 
-        console.log("atile.data.value: " + a.data.value);
+        //console.log("atile.data.value: " + a.data.value);
         let mergedTile = Tile.merge(a, b);
-        console.log("merged tile: " + mergedTile);
+        //console.log("merged tile: " + mergedTile);
         if(mergedTile != null && !merged.includes(a) && !merged.includes(b)){
           this.tiles[row][col] = mergedTile;
           this.tiles[row][col+1] = new Tile(0);
@@ -188,13 +191,13 @@ class Board {
       }
     }
     movedCount += this.moveLeft();
-    console.log("merge length" + merged.length);
+    //console.log("merge length" + merged.length);
     if(movedCount > 0) {
-      console.log("Called fill random");
+      //console.log("Called fill random");
       this.fillRandom();
     }
-    console.log("Won: " + this.won);
-    console.log("Lost: " + this.#gameLost());
+    //console.log("Won: " + this.won);
+    //console.log("Lost: " + this.#gameLost());
   }
 
   /*
@@ -212,6 +215,7 @@ class Board {
               if(this.tiles[row][prevCol].data.frozen || this.tiles[row][prevCol+1].data.frozen) {
                 continue;
               }
+            this.tiles[row][prevCol].moveDir = "left";
             this.tiles[row][prevCol] = this.tiles[row][prevCol+1];
             this.tiles[row][prevCol+1] = new Tile(0);
             result += 1;
@@ -239,9 +243,9 @@ class Board {
           continue;
         }
 
-        console.log("atile.data.value: " + a.data.value);
+        //console.log("atile.data.value: " + a.data.value);
         let mergedTile = Tile.merge(a, b);
-        console.log("merged tile: " + mergedTile);
+        //console.log("merged tile: " + mergedTile);
         if(mergedTile != null && !merged.includes(a) && !merged.includes(b)){
           this.tiles[row][col] = mergedTile;
           this.tiles[row][col-1] = new Tile(0);
@@ -253,13 +257,13 @@ class Board {
       }
     }
     movedCount += this.moveRight();
-    console.log("merge length" + merged.length);
+    //console.log("merge length" + merged.length);
     if(movedCount > 0) {
-      console.log("Called fill random");
+      //console.log("Called fill random");
       this.fillRandom();
     }
-    console.log("Won: " + this.won);
-    console.log("Lost: " + this.#gameLost());
+    //console.log("Won: " + this.won);
+    //console.log("Lost: " + this.#gameLost());
   }
 
   /*
@@ -277,6 +281,7 @@ class Board {
             if(this.tiles[row][prevCol].data.frozen || this.tiles[row][prevCol-1].data.frozen) {
               continue;
             }
+            this.tiles[row][col].moveDir = "right";
             this.tiles[row][prevCol] = this.tiles[row][prevCol-1];
             this.tiles[row][prevCol-1] = new Tile(0);
             result += 1;
