@@ -51,17 +51,43 @@ function ScoreUI({username, score}) {
 }
 
 function App() {
-  const [currentScreen, setCurrentScreen] = useState('Home');
+  const [currentScreen, setCurrentScreen] = useState('Login');
+  const [username, setUsername] = useState('');
 
+  const goBack = () => {
+    if (username === '') {
+      setCurrentScreen('Login');
+    } else {
+      setCurrentScreen('Home');
+    }
+  }
   const showHome = () => setCurrentScreen('Home');
   const showLB = () => setCurrentScreen('Leaderboards');
   const showMP = () => setCurrentScreen('Multiplayer');
   const showPractice = () => setCurrentScreen('Practice');
   const showTutorial = () => setCurrentScreen('Tutorial');
 
-  console.log(currentScreen);
+  const login = (event) => {
+    let inputText = document.getElementById("LoginField").value;
+    if (inputText != "") {
+      setUsername(inputText);
+      showHome();
+    }
+  }
+
+  const handleUsernameChange = (event) => {
+    setUsername(event.target.value); // Update the username state with input value
+  };
+
   return (
     <div className="App">
+      {currentScreen === 'Login' && (
+        <>
+          <input type="text" id="LoginField" placeholder="Username" />
+          <ButtonUI id="Login" onClick={login}>Login</ButtonUI>
+        </>
+      )}
+
       {currentScreen === 'Home' && (
         <>
           <div id="Title">tilio</div>
@@ -76,7 +102,7 @@ function App() {
         <>
           <LeaderboardUI name="High Score" id="scoresLB" />
           <LeaderboardUI name="Fastest 2048" id="timesLB" />
-          <ButtonUI id="Back" onClick={showHome}>Back to Menu</ButtonUI>
+          <ButtonUI id="Back" onClick={goBack}>Back to Menu</ButtonUI>
         </>
       )}
 
@@ -84,26 +110,32 @@ function App() {
         <>
           <BoardUI />
           <LeaderboardUI name="Live Leaderboard" id="liveLB" />
-          <ButtonUI id="Back" onClick={showHome}>Back to Menu</ButtonUI>
+          <ButtonUI id="Back" onClick={goBack}>Back to Menu</ButtonUI>
         </>
       )}
 
       {currentScreen === 'Practice' && (
         <>
           <BoardUI />
-          <ButtonUI id="Back" onClick={showHome}>Back to Menu</ButtonUI>
+          <ButtonUI id="Back" onClick={goBack}>Back to Menu</ButtonUI>
         </>
       )}
 
       {currentScreen === 'Tutorial' && (
         <>
           <TutorialUI />
-          <ButtonUI id="Back" onClick={showHome}>Back to Menu</ButtonUI>
+          <ButtonUI id="Back" onClick={goBack}>Back to Menu</ButtonUI>
         </>
       )}
 
-      <HeaderUI>{currentScreen}</HeaderUI>
-      <ButtonUI id="UsernameLabel">Username</ButtonUI>
+      {currentScreen !== 'Login' && (
+        <>
+          <HeaderUI>{currentScreen}</HeaderUI>
+          <ButtonUI id="UsernameLabel">{username}</ButtonUI>
+        </>
+      )}
+
+
     </div>
   );
 }

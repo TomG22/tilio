@@ -77,7 +77,8 @@ div, button {
 }
 
 #TutorialButton {
-  left: 94.5vw;
+  transform: none;
+  right: 0vw;
   bottom: 0vh;
 }
 
@@ -207,6 +208,20 @@ div, button {
   float: right;
   width: 50%;
   height: 100%;
+}
+
+#LoginField {
+  width: 15vw;
+  height: 5vh;
+  font-size: 20pt;
+  text-align: center;
+  margin-top: 50vh;
+}
+
+#Login {
+  left: 50vw;
+  margin-top: 2vw;
+  margin-right: 5vw;
 }
 
 
