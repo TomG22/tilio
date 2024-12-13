@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const cors = require('cors');
+const { start } = require('repl');
 
 const app = express();
 const PORT = 3000;
@@ -213,6 +214,58 @@ app.post("/leaderboard/live/update", async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
   }
 });
+
+
+// check if the player is under attack
+app.get('/checkAttack', async (req, res) => {
+  const {username } = req.query;
+  try {
+    const player = await GameLive.findOne({ username });
+    if (!player) {
+      return res.status(404).json({ message: 'Player not found'});
+    }
+    if (player.pendingAttack) {
+      player.pendingAttack = false;
+      await player.save()
+
+      return res.status(200).json({ isAttacked: true });
+    }
+    return res.status(200).json({ isAttacked: false });
+  } catch (error) {
+    console.error("Error checking for attack: ", error);
+    res.status(500).json({ message: 'Internal Server Error'});
+  }
+});
+
+
+// attempt to send an attack
+app.post('/attack', async (req, res) => {
+  const { username, score } = req.body;
+
+  console.log("Received attack request:", { username, score }); // Log input
+
+  try {
+    const leaderboard = await GameLive.find().sort({ score: -1 });
+    console.log("Leaderboard:", leaderboard); // Log leaderboard
+    const attackerIndex = leaderboard.findIndex(player => player.username === username);
+    console.log("Attacker Index:", attackerIndex); // Log attacker index
+
+
+    if (attacker === - 1 || attackerIndex === 0) {
+      return res.status(400).json({ message: 'Cannot attack; no valid target above you.'});
+    }
+    const target = leaderboard[attackerIndex - 1];
+    target.pendingAttack = true;
+    await target.save();
+
+    return res.status(200).json({ message: 'Attack sent to next user' });
+  } catch (error) {
+    console.error("Error initiating attack: " + error);
+    res.status(500).json({ message: 'Internal Server Error'});
+  }
+});
+
+
 
 // Start the server
 app.listen(PORT, () => {
