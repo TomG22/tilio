@@ -16,11 +16,11 @@ function HeaderUI({children}) {
   return <div className="Header">{children}</div>;
 }
 
-function ButtonUI({children, id}) {
+function ButtonUI({children, id, onClick}) {
   //const [count, setCount] = useState(0);
   return (
     <div className="ButtonContainer" id={id}>
-      <button className="Button">{children}</button>
+      <button className="Button"onClick={onClick}>{children}</button>
     </div>
   );
 }
@@ -52,17 +52,49 @@ function ScoreUI({username, score}) {
 }
 
 function App() {
-  const [currentScreen, setCurrentScreen] = useState('mainMenu'); // Track the active screen (board or leaderboard)
+  const [currentScreen, setCurrentScreen] = useState('Home');
 
-    return (
+  const showHome = () => setCurrentScreen('Home');
+  const showLB = () => setCurrentScreen('Leaderboards');
+  const showMP = () => setCurrentScreen('Multiplayer');
+  const showPractice = () => setCurrentScreen('Practice');
+
+  console.log(currentScreen);
+  return (
     <div className="App">
-      <HeaderUI>Header</HeaderUI>
-      <BoardUI />
-      <ButtonUI className="Username">Username</ButtonUI>
-      <ButtonUI className="Play">Play</ButtonUI>
-      <LeaderboardUI name="High Score" id="scoresLB"/>
-      <LeaderboardUI name="Fastest 2048" id="timesLB"/>
-      <LeaderboardUI name="Live Leaderboard" id="liveLB"/>
+      {currentScreen === 'Home' && (
+        <>
+          <ButtonUI id="SPButton" onClick={showPractice}>Practice</ButtonUI>
+          <ButtonUI id="MPButton" onClick={showMP}>Multiplayer</ButtonUI>
+          <ButtonUI id="LBButton" onClick={showLB}>Leaderboards</ButtonUI>
+        </>
+      )}
+
+      {currentScreen === 'Leaderboards' && (
+        <>
+          <LeaderboardUI name="High Score" id="scoresLB" />
+          <LeaderboardUI name="Fastest 2048" id="timesLB" />
+          <ButtonUI id="Back" onClick={showHome}>Back to Menu</ButtonUI>
+        </>
+      )}
+
+      {currentScreen === 'Multiplayer' && (
+        <>
+          <BoardUI />
+          <LeaderboardUI name="Live Leaderboard" id="liveLB" />
+          <ButtonUI id="Back" onClick={showHome}>Back to Menu</ButtonUI>
+        </>
+      )}
+
+      {currentScreen === 'Practice' && (
+        <>
+          <BoardUI />
+          <ButtonUI id="Back" onClick={showHome}>Back to Menu</ButtonUI>
+        </>
+      )}
+
+      <HeaderUI>{currentScreen}</HeaderUI>
+      <ButtonUI id="UsernameLabel">Username</ButtonUI>
     </div>
   );
 }

@@ -26,39 +26,62 @@ div, button {
 }
 
 .ButtonContainer {
-  position: fixed;
-  background-color: red;
+  transform: translate(-50%, 0%);
+  position: absolute;
 }
 
 .Button {
+  padding: 15px;
+  line-height: 20pt;
+  cursor: pointer;
+  border-radius: 15pt;
   position: relative;
   background-color: var(--pri-color);
-  height: 10vh;
+  box-sizing: border-box;
   font-size: 30pt;
 }
 
-.Username {
-  background-color: var(--sec-color);
-  right: 0%;
-  margin: 0% 0% 0% 0%;
-  width: 15vw;
-  height: 6vh;
+#Back {
+  transform: none;
+  left: 0px;
+  bottom: 0px;
+}
+
+#Back * {
+  border-radius: 0px;
+  border-top-right-radius: 20px;
 }
 
 #SPButton {
-  margin: 0px;
+  left: 50vw;
+  bottom: 34vh;
 }
 
 #MPButton {
-  margin: 0px;
+  left: 50vw;
+  bottom: 22vh;
 }
 
 #LBButton {
-  margin: 0px;
+  left: 50vw;
+  bottom: 10vh;
 }
 
-#UsernameLabel{
-  right: 0px;
+#UsernameLabel {
+  transform: none;
+  top: 0px;
+  right: 0vw;
+}
+
+#UsernameLabel * {
+  cursor: default;
+  border-radius: 0px;
+  border-bottom-left-radius: 20px;
+  padding: 15px;
+  transform: none;
+  top: 0px;
+  right: 0vw;
+  font-size: 25pt;
 }
 
 #UsernameFieldLabel {
