@@ -27,11 +27,75 @@ function ButtonUI({className, children}) {
 
 function BoardUI() {
   const [board, setBoard] = useState(new Board());
+  const [score, setScore] = useState(0);
+
+  const checkForAttack = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/checkAttack', { 
+        // TODO: CHANGE W SERVER URL + ADD FETCH
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      if (!response.ok) throw new Error('Error checking attack');
+      const data = await response.json();
+      if (data.isAttacked) {
+        board.freezeTile(data.targetTile); // TODO: Handle freezing
+        setBoard(board); // trigger re-render ???
+      }
+    } catch (error) {
+      console.error('Error checking for attack:', error);
+    }
+  };
+
+  const handleMove = async (direction) => {
+    await checkForAttack();
+
+    switch(direction) {
+      case 'up':
+        board.up();
+        break;
+      case 'down':
+        board.down();
+        break;
+      case 'left':
+        board.left();
+        break;
+      case 'right':
+        board.right();
+        break;
+      default:
+        return;
+    }
+
+    setBoard(new Board(board)); // update state
+    setScore(board.getScore()); // update score
+    checkAttackTrigger(); // check if a new attack should be sent
+  };
+
+  const checkAttackTrigger = () => {
+    if (score >= 2000 && (Math.log2(score / 2000) % 1 === 0)) {
+      sendAttack();
+    }
+  };
+
+  const sendAttack = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/attack', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ score }),
+      });
+      if (!response.ok) throw new Error('Error sending attack');
+      console.log('attack sent!');
+    } catch (error) {
+      console.error('Error sending attack:', error);
+    }
+  };
 
   // Handler for when the board changes
   useEffect(() => {
-
-  }, [board]);
+    // window.addEventListener('keydown', handleKeyPress); // ??
+  }, [board, score]);
 
   const tiles = board.getTiles(); // Get tiles from the Board instance
   console.log(board.toString());
@@ -206,7 +270,8 @@ async function fetchUpdatedBoard () {
         console.error("Error:", error);
     }
 })();
-async function updateLiveLeaderboard( { score, endTime, winTime, board }) {
+async function updateLiveLeaderboard( { 
+score, endTime, winTime, board }) {
   const payload = {
     userID,
     score, 
