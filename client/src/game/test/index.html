@@ -45,6 +45,11 @@
         .tile.empty {
             background-color: #f0f0f0;
         }
+        #scoreContainer {
+            font-size: 20px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
     </style>
     <script type="module">
         import Board from './Board.js'; // Ensure this path matches where Board.js is located
@@ -89,6 +94,11 @@
             }
         }
 
+        function renderScore() {
+            const scoreContainer = document.getElementById('scoreContainer');
+            scoreContainer.textContent = `Score ${board.getScore()}`;
+        }
+
         // Function to handle key presses
         function handleKeyPress(event) {
             switch (event.key) {
@@ -112,6 +122,7 @@
                     return;
             }
             renderBoard();
+            renderScore();
         }
 
         // Attach the event listener for keydown
@@ -120,12 +131,14 @@
         // Initial render
         window.onload = function() {
             renderBoard();
+            renderScore();
         };
     </script>
 </head>
 <body>
     <h1>Board and Tile Tester</h1>
     <p>Use the arrow keys to move the board. The grid below shows the board's current state:</p>
+    <div id="scoreContainer">Score: 0</div>
     <div id="boardContainer"></div>
 </body>
 </html>

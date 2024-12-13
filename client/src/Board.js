@@ -14,6 +14,7 @@ class Board {
   constructor() {
     this.won = false;
     this.tiles = [];
+    this.score = 0;
     for (let row = 0; row < 4; row++) {
       this.tiles[row] = [];
       for (let col = 0; col < 4; col++) {
@@ -49,6 +50,7 @@ class Board {
           this.tiles[row][col] = mergedTile;
           this.tiles[row + 1][col] = new Tile(0);
           merged.push(mergedTile);
+          this.score += mergedTile.data.value;  // UPDATE SCORE
           if(mergedTile.data.value === 2048) {
             this.won = true;
           }
@@ -116,6 +118,7 @@ class Board {
           this.tiles[row][col] = mergedTile;
           this.tiles[row - 1][col] = new Tile(0);
           merged.push(mergedTile);
+          this.score += mergedTile.data.value;  // UPDATE SCORE
           if(mergedTile.data.value === 2048) {
             this.won = true;
           }
@@ -181,6 +184,7 @@ class Board {
           this.tiles[row][col] = mergedTile;
           this.tiles[row][col+1] = new Tile(0);
           merged.push(mergedTile);
+          this.score += mergedTile.data.value;  // UPDATE SCORE
           if(mergedTile.data.value === 2048) {
             this.won = true;
           }
@@ -246,6 +250,7 @@ class Board {
           this.tiles[row][col] = mergedTile;
           this.tiles[row][col-1] = new Tile(0);
           merged.push(mergedTile);
+          this.score += mergedTile.data.value;  // UPDATE SCORE
           if(mergedTile.data.value === 2048) {
             this.won = true;
           }
@@ -430,6 +435,10 @@ class Board {
       }
     }
     return result;
+  }
+
+  getScore() {
+    return this.score;
   }
 }
 export default Board;

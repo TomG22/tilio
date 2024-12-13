@@ -6,12 +6,22 @@
 
 class Tile {
   // constructs a tile object with its values stored in JSON object
-  constructor(value) {
+  constructor(value, parent1, parent2) {
     this.data = {
       value: value,
-      frozen: false
+      frozen: false,
+      id: this.newID(),
+      parent1: null,
+      parent2: null
     };
 
+    if (parent1) {
+      this.data.parent1 = parent1;
+    }
+
+    if (parent2) {
+      this.data.parent2 = parent2;
+    }
   }
 
   /**
@@ -22,7 +32,8 @@ class Tile {
   */
   static merge(aTile, bTile) {
     if (aTile.data.value !== 0 && aTile.data.value === bTile.data.value) {
-      return new Tile(aTile.data.value + bTile.data.value);
+      const mergedVal = aTile.data.value + bTile.data.value;
+      return new Tile(mergedVal, aTile.data.id, bTile.data.id);
     }
     return null;
   }
@@ -45,6 +56,10 @@ class Tile {
     setInterval(() => {
       this.data.frozen = false;
     }, 30000);
+  }
+
+  newID() {
+    return "" + Date.now() + "+" + Math.random();
   }
 }
 
