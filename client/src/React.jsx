@@ -64,6 +64,7 @@ function App() {
     <div className="App">
       {currentScreen === 'Home' && (
         <>
+          <div id="Title">tilio</div>
           <ButtonUI id="SPButton" onClick={showPractice}>Practice</ButtonUI>
           <ButtonUI id="MPButton" onClick={showMP}>Multiplayer</ButtonUI>
           <ButtonUI id="LBButton" onClick={showLB}>Leaderboards</ButtonUI>
