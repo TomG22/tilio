@@ -152,6 +152,8 @@ app.post("/leaderboard/live/update", async (req, res) => {
       { board },
       { startTime },
       { lastMove },
+      { endTime },
+      { winTime },
       { new: true, upsert: false }
     );
 

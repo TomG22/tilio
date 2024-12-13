@@ -64,6 +64,7 @@ function App() {
     <div className="App">
       {currentScreen === 'Home' && (
         <>
+          <div id="Title">tilio</div>
           <ButtonUI id="SPButton" onClick={showPractice}>Practice</ButtonUI>
           <ButtonUI id="MPButton" onClick={showMP}>Multiplayer</ButtonUI>
           <ButtonUI id="LBButton" onClick={showLB}>Leaderboards</ButtonUI>
@@ -160,20 +161,14 @@ async function fetchUpdatedBoard () {
           username: 'eddie'
         });
         await updateLiveLeaderboard({
-            userID: userID,
             score: 'eddie i like juice',
-            startTime: '2024-12-10T10:00:00',
+            board: [1, 2, 3, 4, 5],
+            startTime: Date.now(),
+            lastMove: Date.now(),
             endTime: '2024-12-10T10:00:00',
-            board: [1, 2, 3, 4, 5]
+            winTime: Date.now()
         });
         await fetchLiveLeaderboard();
-        await updateLiveLeaderboard({
-            userID: userID,
-            score: 'eddie i like juice also 2',
-            startTime: '2024-12-10T10:00:00',
-            endTime: '2024-12-10T10:00:00',
-            board: [1, 2, 3, 4, 5]
-        });
         await fetchLiveLeaderboard();
         console.log("OWOOOOOWOWOWOOO");
     } catch (error) {
@@ -181,13 +176,15 @@ async function fetchUpdatedBoard () {
     }
 })();
 async function updateLiveLeaderboard( { 
-score, endTime, winTime, board }) {
+score, board, startTime, lastMove, endTime, winTime }) {
   const payload = {
-    userID,
-    score, 
-    endTime,
-    winTime,
+    username,
+    score,
     board,
+    startTime,
+    lastMove,
+    endTime,
+    winTime
   };
 
   try {
@@ -214,8 +211,11 @@ score, endTime, winTime, board }) {
 
 }
 async function createUser({username}) {
+  let startTime = Date.now();
+
   const payload = {
-    username
+    username,
+    startTime
   };
 
   try {

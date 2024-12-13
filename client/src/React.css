@@ -25,6 +25,15 @@ div, button {
   text-align: center;
 }
 
+#Title {
+  position: fixed;
+  transform: translate(-50%, -50%);
+  left: 50vw;
+  top: 40vh;
+  font-size: 60pt;
+  font-family: monospace;
+}
+
 .ButtonContainer {
   transform: translate(-50%, 0%);
   position: absolute;
