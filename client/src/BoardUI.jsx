@@ -62,7 +62,7 @@ function BoardUI({ username }) {
     setBoard(new Board(board)); // Update state with new board instance
     setScore(board.getScore()); // Update score
     console.log("score", board.getScore());
-    updateLiveLeaderboard(board.getScore, board.getTiles(), startTime, Date.now(), '', '');
+    updateLiveLeaderboard(board.getScore(), board.getTiles(), startTime, Date.now(), '', '');
     checkAttackTrigger(); // Check if a new attack should be triggered
     checkForAttack();
   }

@@ -67,25 +67,14 @@ app.post("/createuser", async (req, res) => {
   } = req.body;
 
   try {
-
-    let user = await GameLive.findOne({ username });
-
-    const result = await GameStatic.findOneAndUpdate(
+    const result = await GameLive.findOneAndUpdate(
       { username },
       {},
       { new: true, upsert: true }
     );
-    //if (!user) {
-    //  user = new GameLive({
-    //    username,
-    //    score: 0,
-    //    board: [],
-    //    startTime: new Date(),
-    //    endTime: null,
-    //    winTime: null,
-    //  });
-    //  await user.save();
-    //}
+
+    const test = await GameStatic.findOne({ username });
+    console.log(test);
     res.status(200).json({
       message: 'User added successfully.',
       username: result.username
@@ -199,7 +188,7 @@ app.post("/leaderboard/live/update", async (req, res) => {
   try {
     const result = await GameLive.findOneAndUpdate(
       { username },
-      { score, updatedAt: Date.now() },
+      { score},
       { board },
       { startTime },
       { endTime },
@@ -260,9 +249,10 @@ app.post('/checkAttack', async (req, res) => {
   try {
     const { username } = req.body;
     console.log("body check attack " + req.body);
-    console.log(username);
+    console.log("username in check attack" + username);
+    const all = await GameLive.find({});
+    console.log(all);
     const player = await GameLive.findOne({ username });
-    console.log(username);
     if (!player) {
       console.log("Check attack player not found");
       return res.status(400).json({ message: 'Player not found'});
