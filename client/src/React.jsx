@@ -240,7 +240,7 @@ function App() {
 
       {currentScreen === 'Multiplayer' && (
         <>
-          <BoardUI />
+          <BoardUI username={username}/>
           <LeaderboardUI name="Live Leaderboard" id="liveLB" fetchData={fetchLiveLeaderboard} />
           <ButtonUI id="Back" onClick={goBack}>Back to Menu</ButtonUI>
         </>
@@ -248,7 +248,7 @@ function App() {
 
       {currentScreen === 'Practice' && (
         <>
-          <BoardUI />
+          <BoardUI username={username}/>
           <ButtonUI id="Back" onClick={goBack}>Back to Menu</ButtonUI>
         </>
       )}

@@ -70,21 +70,25 @@ app.post("/createuser", async (req, res) => {
 
     let user = await GameLive.findOne({ username });
 
-    if (!user) {
-      user = new GameLive({
-        username,
-        score: 0,
-        board: [],
-        startTime: new Date(),
-        endTime: null,
-        winTime: null,
-      });
-      await user.save();
-    }
+    const result = await GameStatic.findOneAndUpdate(
+      { username },
+      {},
+      { new: true, upsert: true }
+    );
+    //if (!user) {
+    //  user = new GameLive({
+    //    username,
+    //    score: 0,
+    //    board: [],
+    //    startTime: new Date(),
+    //    endTime: null,
+    //    winTime: null,
+    //  });
+    //  await user.save();
+    //}
     res.status(200).json({
       message: 'User added successfully.',
-      data: user._id,
-      username: user.username
+      username: result.username
     });
   } catch (error) {
         console.error('Error adding user:', error);
@@ -208,7 +212,7 @@ app.post("/leaderboard/live/update", async (req, res) => {
       *
       * game over is denoted by an nonzero endTime
       */
-    if (endTime != 0) {
+    if (endTime != '') {
       await GameStatic.findOneAndUpdate(
         { username },
         {
@@ -251,9 +255,10 @@ app.post("/leaderboard/live/update", async (req, res) => {
 
 // check if the player is under attack
 app.post('/checkAttack', async (req, res) => {
-  const { username } = req.query;
+  const { username } = req.body;
   try {
     const player = await GameLive.findOne({ username });
+    console.log(username);
     if (!player) {
       return res.status(400).json({ message: 'Player not found'});
     }

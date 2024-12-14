@@ -2,16 +2,19 @@ import React, { useState, useEffect } from 'react';
 import Board from './Board';
 import TileUI from './TileUI';
 
-let username;
+//let username;
+const startTime = Date.now();
 const db_port = 27017;
 const port = 3000;
 const hostname = `localhost`;
 
-function BoardUI() {
+function BoardUI({ usernameIn }) {
+  const username = usernameIn; 
   const [board, setBoard] = useState(new Board());
   const [score, setScore] = useState(0);
 
   const checkForAttack = async () => {
+    console.log(username);
     try {
       const payload = {
         username
@@ -60,6 +63,7 @@ function BoardUI() {
     setBoard(new Board(board)); // Update state with new board instance
     setScore(board.getScore()); // Update score
     console.log(board.getScore());
+    updateLiveLeaderboard(board.getScore, board.getTiles(), startTime, Date.now(), '', '');
     checkAttackTrigger(); // Check if a new attack should be triggered
     checkForAttack();
   }
