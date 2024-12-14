@@ -26,18 +26,60 @@ function ButtonUI({children, id, onClick}) {
   );
 }
 
-function LeaderboardUI({name, id}) {
-  return (
-    <div className="Leaderboard" id={id}>
-      {name}
-      <ScoreUI username="Player" score="9999" />
-      <ScoreUI username="Player" score="9999" />
-      <ScoreUI username="Player" score="9999" />
-      <ScoreUI username="Player" score="9999" />
-      <ScoreUI username="Player" score="9999" />
-    </div>
-  );
-}
+function LeaderboardUI({name, id, username, score}) {
+    /*const [lbData, setLBData] = useState([]);
+
+    const getData = async () => {
+      try {
+        const user = await fetchLiveLeaderboard();
+
+        setLBData(lbData);
+      } catch (error) {
+        console.error("Error selecting mode: ", error);
+      }
+    };
+
+    async function fetchLiveLeaderboard () {
+      await fetch('http://localhost:3000/leaderboard/live')
+      .then(response => response.json())
+      .then(data => {
+        console.log(getData());
+        return data;
+      })
+        
+      .catch(error => {
+        console.log("meow");
+        console.error(error)}
+      );
+  }
+
+    return (
+      <div className="Leaderboard" id={id}>
+        {name}
+        return (
+        <div className="Leaderboard" id={id}>
+          {name}
+          {lbData.map((game, index) => (
+            <ScoreUI
+              username={username}
+              score={score}
+            />
+          ))}
+        </div>
+      </div>
+    );*/
+
+    return (
+      <div className="Leaderboard" id={id}>
+        {name}
+        <ScoreUI username="Player" score="9999" />
+        <ScoreUI username="Player" score="9999" />
+        <ScoreUI username="Player" score="9999" />
+        <ScoreUI username="Player" score="9999" />
+        <ScoreUI username="Player" score="9999" />
+      </div>
+    );
+  }
 
 function ScoreUI({username, score}) {
   return (
@@ -175,6 +217,7 @@ function App() {
         <>
           <LeaderboardUI name="High Score" id="scoresLB" />
           <LeaderboardUI name="Fastest 2048" id="timesLB" />
+          <LeaderboardUI name="2048 Winners" id="winnersLB" />
           <ButtonUI id="Back" onClick={goBack}>Back to Menu</ButtonUI>
         </>
       )}
