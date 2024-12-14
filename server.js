@@ -30,12 +30,12 @@ mongoose.connect(`mongodb://${hostname}:${db_port}/mernstack`, {
 
 const winnersSchema = new mongoose.Schema ({
   username: String,
-  score: String
+  score: Number 
 })
 
 const gameSchema = new mongoose.Schema({
   username: String,
-  score: { type: String, default: "0"},
+  score: { type: Number, default: 0 },
   startTime: Date,
   endTime: Date,
   winTime: Date,
@@ -44,7 +44,7 @@ const gameSchema = new mongoose.Schema({
 
 const gameOverSchema = new mongoose.Schema({
   username: String,
-  score: String,
+  score: Number,
   winTime: Number 
 });
 
@@ -142,7 +142,7 @@ app.get("/getUpdatedBoard", async (req, res) => {
 app.get("/leaderboard/static", async (req, res) => {
   try {
     console.log("Got the static get")
-    const leaderboard = await GameStatic.find().sort({ score: 1});
+    const leaderboard = await GameStatic.find().sort({ score: -1});
     res.json(leaderboard);
   } catch (error){
     console.error(error);
@@ -154,7 +154,7 @@ app.get("/leaderboard/static", async (req, res) => {
   */
 app.get("/leaderboard/live", async (req, res) => {
   try {
-    const leaderboard = await GameLive.find().sort({ score: 1});
+    const leaderboard = await GameLive.find().sort({ score: -1});
     res.json(leaderboard);
   } catch (error){
 
@@ -166,7 +166,7 @@ app.get("/leaderboard/live", async (req, res) => {
   */
 app.get("/leaderboard/winners", async (req, res) => {
   try {
-    const leaderboard = await GameWinners.find().sort({ score: 1});
+    const leaderboard = await GameWinners.find().sort({ score: -1});
     res.json(leaderboard);
   } catch (error){
 
