@@ -3,6 +3,9 @@ import Board from './Board';
 import TileUI from './TileUI';
 
 let username;
+const db_port = 27017;
+const port = 3000;
+const hostname = `localhost`;
 
 function BoardUI() {
   const [board, setBoard] = useState(new Board());
@@ -10,7 +13,8 @@ function BoardUI() {
 
   const checkForAttack = async () => {
     try {
-      const response = await fetch('http://localhost:3000/checkAttack', { 
+      const response = await fetch(`http://${hostname}:${port}/checkAttack`, {
+ 
         // TODO: Replace with server URL
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
@@ -52,27 +56,6 @@ function BoardUI() {
     setScore(board.getScore()); // Update score
     console.log(board.getScore());
     checkAttackTrigger(); // Check if a new attack should be triggered
-    // (async () => {
-    //     username = "eddie";
-    //     try {
-    //         await createUser({
-    //           username: username
-    //         });
-    //         await updateLiveLeaderboard({
-    //             score: 'eddie i like juice 2jisjfoijdsijoigsdoadf',
-    //             board: board.getTilesData(),
-    //             startTime: Date.now(),
-    //             lastMove: Date.now(),
-    //             endTime: '',
-    //             winTime: Date.now()
-    //         });
-    //         await fetchLiveLeaderboard();
-    //         await fetchLiveLeaderboard();
-    //         console.log("OWOOOOOWOWOWOOO");
-    //     } catch (error) {
-    //         console.error("Error:", error);
-    //     }
-    // })();
     checkForAttack();
   }
 
@@ -84,7 +67,7 @@ function BoardUI() {
 
   const sendAttack = async () => {
     try {
-      const response = await fetch('http://localhost:3000/attack', {
+      const response = await fetch(`http://${hostname}:${port}/attack`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ score }),
@@ -123,7 +106,7 @@ function BoardUI() {
   );
 
 async function fetchLiveLeaderboard () {
-    await fetch('http://localhost:3000/leaderboard/live')
+    await fetch(`http://${hostname}:${port}/leaderboard/live`)
     .then(response => response.json())
     .then(data => {
       console.log(data);
@@ -137,9 +120,8 @@ async function fetchLiveLeaderboard () {
 }
 
 
-(async () => { await fetchStaticLeaderboard(); })();
 async function fetchStaticLeaderboard() {
-    await fetch('http://localhost:3000/leaderboard/static')
+    await fetch(`http://${hostname}:${port}/leaderboard/static`)
     .then(response => response.json())
     .then(data => {
       console.log(data);
@@ -153,7 +135,7 @@ async function fetchUpdatedBoard () {
   };
 
   try {
-    const response = await fetch('http://localhost:3000/getBoardUpdate', {
+    const response = await fetch(`http://${hostname}:${port}/getBoardUpdate`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -175,7 +157,7 @@ async function fetchUpdatedBoard () {
 }
 
 async function fetchWinners() {
-    await fetch('http://localhost:3000/leaderboard/winners')
+    await fetch(`http://${hostname}:${port}/leaderboard/winners`)
     .then(response => response.json())
     .then(data => {
       console.log(data);
@@ -196,7 +178,7 @@ score, board, startTime, lastMove, endTime, winTime }) {
   };
 
   try {
-    const response = await fetch('http://localhost:3000/leaderboard/live/update', {
+    const response = await fetch(`http://${hostname}:${port}/leaderboard/live/update`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -215,12 +197,7 @@ score, board, startTime, lastMove, endTime, winTime }) {
   } catch (error) {
       console.error(error);
   }
-
-
 }
-
-
-
 }
 
 export default BoardUI;

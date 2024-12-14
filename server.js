@@ -6,13 +6,15 @@ const { start } = require('repl');
 
 const app = express();
 const PORT = 3000;
+const db_port = 27017;
+const hostname = 'localhost';
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/mernstack', {
+mongoose.connect(`mongodb://${hostname}:${db_port}/mernstack`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 })
@@ -35,7 +37,6 @@ const gameSchema = new mongoose.Schema({
   username: String,
   score: String,
   startTime: Date,
-  lastMove: Date,
   endTime: Date,
   winTime: Date,
   pendingAttack: { type: Boolean, default: false },
@@ -66,15 +67,49 @@ app.post("/createuser", async (req, res) => {
   } = req.body;
 
   try {
-    const result = await GameLive.findOneAndUpdate(
+
+    let user = await GameLive.findOne({ username });
+
+    if (!user) {
+      user = new GameLive({
+        username,
+        score: 0,
+        board: [],
+        startTime: new Date(),
+        endTime: null,
+        winTime: null,
+      });
+      await user.save();
+    }
+    res.status(200).json({
+      message: 'User added successfully.',
+      data: user._id,
+      username: user.username
+    });
+  } catch (error) {
+        console.error('Error adding user:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+app.post("/createStaticUser", async (req, res) => {
+  const {
+    username
+  } = req.body;
+  console.log('Received payload:', req.body); // Log the payload
+
+  try {
+    console.log("server creating static user " + username);
+    const result = await GameStatic.findOneAndUpdate(
       { username },
       {},
       { new: true, upsert: true }
     );
 
     res.status(200).json({
-      message: 'Leaderboard updated successfully.',
-      data: result._id
+      message: 'server successfully added static user.',
+      data: result._id,
+      username: result.username
     });
   } catch (error) {
         console.error('Error adding user:', error);
@@ -153,7 +188,6 @@ app.post("/leaderboard/live/update", async (req, res) => {
             score,
             board,
             startTime,
-            lastMove,
             endTime,
             winTime
           } = req.body;
@@ -164,7 +198,6 @@ app.post("/leaderboard/live/update", async (req, res) => {
       { score, updatedAt: Date.now() },
       { board },
       { startTime },
-      { lastMove },
       { endTime },
       { winTime },
       { new: true, upsert: false }
@@ -218,11 +251,13 @@ app.post("/leaderboard/live/update", async (req, res) => {
 
 // check if the player is under attack
 app.get('/checkAttack', async (req, res) => {
+  console.log("hi");
   const {username } = req.query;
   try {
+    console.log("hi again");
     const player = await GameLive.findOne({ username });
     if (!player) {
-      return res.status(404).json({ message: 'Player not found'});
+      return res.status(400).json({ message: 'Player not found'});
     }
     if (player.pendingAttack) {
       player.pendingAttack = false;
@@ -269,5 +304,5 @@ app.post('/attack', async (req, res) => {
 
 // Start the server
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`Server is running on http://${hostname}:${PORT}`);
 });

@@ -10,6 +10,8 @@ import BoardUI from './BoardUI';
 import React, {useState, useRef, useEffect} from 'react';
 import TutorialUI from './TutorialUI';
 
+const hostname = `localhost`;
+const port = 3000;
 
 function HeaderUI({children}) {
   return <div className="Header">{children}</div>;
@@ -64,8 +66,6 @@ function App() {
   }
   const showHome = () => setCurrentScreen('Home');
   const showLB = () => setCurrentScreen('Leaderboards');
-  const showMP = () => setCurrentScreen('Multiplayer');
-  const showPractice = () => setCurrentScreen('Practice');
   const showTutorial = () => setCurrentScreen('Tutorial');
 
   const login = (event) => {
@@ -78,8 +78,13 @@ function App() {
 
   const selectMode = async (mode) => {
     try {
-      const user = await createUser(username);
-
+      console.log(`selectMode creating user ${username}`);
+      if (mode === 'Practice') {
+        console.log("entering practice mode with ", username);
+        const user = await createStaticUser({ username });
+      } else if (mode === 'Multiplayer'){
+        const user = await createUser({ username });
+      }
       setCurrentScreen(mode);
     } catch (error) {
       console.error("Error selecting mode: ", error);
@@ -99,7 +104,7 @@ function App() {
     };
   
     try {
-      const response = await fetch('http://localhost:3000/createuser', {
+      const response = await fetch(`http://${hostname}:${port}/createuser`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -112,6 +117,35 @@ function App() {
     
       const data = await response.json(); // Parse the response
       console.log('User created successfully:', data);
+    } catch (error) {
+        console.error(error);
+    }
+  }
+
+  async function createStaticUser({username}) {
+    let startTime = Date.now();
+  
+    const payload = {
+      username,
+      startTime,
+    };
+  
+    console.log("payload: ", payload);
+    try {
+      const response = await fetch(`http://${hostname}:${port}/createStaticUser`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      console.log("client creating static user " + payload.username);
+      if (!response.ok) {
+        // Log and throw an error if the response is not OK
+        const errorText = await response.text(); // Read the error response as plain text
+        throw new Error(`Server error: ${response.status} - ${errorText}`);
+      }
+    
+      const data = await response.json(); // Parse the response
+      console.log('client successfully static created user: ', data);
     } catch (error) {
         console.error(error);
     }
