@@ -175,13 +175,15 @@ div, button {
 }
 
 #scoresLB {
-  right: 50vw;
-  margin-right: 5vw;
+  left: 15vw;
 }
 
 #timesLB {
-  left: 50vw;
-  margin-left: 5vw;
+  left: 40vw;
+}
+
+#winnersLB {
+  right: 15vw;
 }
 
 #liveLB {
