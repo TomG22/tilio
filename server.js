@@ -250,11 +250,9 @@ app.post("/leaderboard/live/update", async (req, res) => {
 
 
 // check if the player is under attack
-app.get('/checkAttack', async (req, res) => {
-  console.log("hi");
-  const {username } = req.query;
+app.post('/checkAttack', async (req, res) => {
+  const { username } = req.query;
   try {
-    console.log("hi again");
     const player = await GameLive.findOne({ username });
     if (!player) {
       return res.status(400).json({ message: 'Player not found'});

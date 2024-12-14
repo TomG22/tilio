@@ -13,17 +13,22 @@ function BoardUI() {
 
   const checkForAttack = async () => {
     try {
+      const payload = {
+        username
+      };
       const response = await fetch(`http://${hostname}:${port}/checkAttack`, {
  
         // TODO: Replace with server URL
-        method: 'GET',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
       });
-      const data = await response.json();
-      console.log('data: ' + data);
+      const resObject = await response.json();
+      console.log(resObject);
+      console.log('data: ' + resObject.isAttacked);
       if (!response.ok) throw new Error('Error checking attack');
-      if (data.isAttacked) {
-        board.freezeTile(data.targetTile); // Handle freezing
+      if (resObject.isAttacked) {
+        board.freezeTile(); // Handle freezing0
         // setBoard(new Board(board)); // Trigger re-render with updated board state
       }
     } catch (error) {
