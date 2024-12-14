@@ -8,7 +8,7 @@ const db_port = 27017;
 const port = 3000;
 const hostname = `localhost`;
 
-function BoardUI({ username }) {
+function BoardUI({ username, mode }) {
   const [board, setBoard] = useState(new Board());
   const [score, setScore] = useState(0);
 
@@ -72,8 +72,11 @@ function BoardUI({ username }) {
       endTime: '',             // Empty string for endTime
       winTime: ''              // Empty string for winTime
     });
-    checkAttackTrigger(); // Check if a new attack should be triggered
-    checkForAttack();
+    if (mode === "Multiplayer") {
+      console.log("ATTACKING");
+      checkAttackTrigger(); // Check if a new attack should be triggered
+      checkForAttack();
+    }
   }
 
   const checkAttackTrigger = () => {
