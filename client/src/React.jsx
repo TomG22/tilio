@@ -7,90 +7,63 @@
 
 import './React.css';
 import BoardUI from './BoardUI';
-import React, {useState, useRef, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import TutorialUI from './TutorialUI';
 
 const hostname = `localhost`;
 const port = 3000;
 
-function HeaderUI({children}) {
+function HeaderUI({ children }) {
   return <div className="Header">{children}</div>;
 }
 
-function ButtonUI({children, id, onClick}) {
-  //const [count, setCount] = useState(0);
+function ButtonUI({ children, id, onClick }) {
   return (
     <div className="ButtonContainer" id={id}>
-      <button className="Button"onClick={onClick}>{children}</button>
+      <button className="Button" onClick={onClick}>{children}</button>
     </div>
   );
 }
 
-function LeaderboardUI({name, id, username, score}) {
-    /*const [lbData, setLBData] = useState([]);
+function LeaderboardUI({ name, id, fetchData }) {
+  const [leaderboardData, setLeaderboardData] = useState([]);
 
-    const getData = async () => {
+  useEffect(() => {
+    async function loadLeaderboardData() {
       try {
-        const user = await fetchLiveLeaderboard();
-
-        setLBData(lbData);
+        const data = await fetchData(); // Fetch data using the provided fetch function
+        setLeaderboardData(data);
       } catch (error) {
-        console.error("Error selecting mode: ", error);
+        console.error(`Error fetching leaderboard data: ${error}`);
       }
-    };
+    }
+    loadLeaderboardData();
+  }, [fetchData]);
 
-    async function fetchLiveLeaderboard () {
-      await fetch('http://localhost:3000/leaderboard/live')
-      .then(response => response.json())
-      .then(data => {
-        console.log(getData());
-        return data;
-      })
-        
-      .catch(error => {
-        console.log("meow");
-        console.error(error)}
-      );
-  }
-
-    return (
-      <div className="Leaderboard" id={id}>
-        {name}
-        return (
-        <div className="Leaderboard" id={id}>
-          {name}
-          {lbData.map((game, index) => (
-            <ScoreUI
-              username={username}
-              score={score}
-            />
-          ))}
-        </div>
-      </div>
-    );*/
-
-    return (
-      <div className="Leaderboard" id={id}>
-        {name}
-        <ScoreUI username="Player" score="9999" />
-        <ScoreUI username="Player" score="9999" />
-        <ScoreUI username="Player" score="9999" />
-        <ScoreUI username="Player" score="9999" />
-        <ScoreUI username="Player" score="9999" />
-      </div>
-    );
-  }
-
-function ScoreUI({username, score}) {
   return (
-  <div className="Score">
-    <div className="UsernameLabel">
-      {username}
+    <div className="Leaderboard" id={id}>
+      <h2>{name}</h2>
+      {leaderboardData.length > 0 ? (
+        leaderboardData.map((entry, index) => (
+          <ScoreUI
+            key={index}
+            username={entry.username || "Unknown"}
+            score={entry.score || "N/A"}
+          />
+        ))
+      ) : (
+        <div>Loading...</div>
+      )}
     </div>
-    <div className="ScoreLabel">
-      {score}
+  );
+}
+
+function ScoreUI({ username, score }) {
+  return (
+    <div className="Score">
+      <div className="UsernameLabel">{username}</div>
+      <div className="ScoreLabel">{score}</div>
     </div>
-  </div>
   );
 }
 
@@ -98,34 +71,33 @@ function App() {
   const [currentScreen, setCurrentScreen] = useState('Login');
   const [username, setUsername] = useState('');
 
-
   const goBack = () => {
     if (username === '') {
       setCurrentScreen('Login');
     } else {
       setCurrentScreen('Home');
     }
-  }
+  };
   const showHome = () => setCurrentScreen('Home');
   const showLB = () => setCurrentScreen('Leaderboards');
   const showTutorial = () => setCurrentScreen('Tutorial');
 
   const login = (event) => {
     let inputText = document.getElementById("LoginField").value;
-    if (inputText != "") {
+    if (inputText !== "") {
       setUsername(inputText);
       showHome();
     }
-  }
+  };
 
   const selectMode = async (mode) => {
     try {
       console.log(`selectMode creating user ${username}`);
       if (mode === 'Practice') {
         console.log("entering practice mode with ", username);
-        const user = await createStaticUser({ username });
-      } else if (mode === 'Multiplayer'){
-        const user = await createUser({ username });
+        await createStaticUser({ username });
+      } else if (mode === 'Multiplayer') {
+        await createUser({ username });
       }
       setCurrentScreen(mode);
     } catch (error) {
@@ -134,17 +106,17 @@ function App() {
   };
 
   const handleUsernameChange = (event) => {
-    setUsername(event.target.value); // Update the username state with input value
+    setUsername(event.target.value);
   };
 
-  async function createUser({username}) {
+  async function createUser({ username }) {
     let startTime = Date.now();
-  
+
     const payload = {
       username,
       startTime
     };
-  
+
     try {
       const response = await fetch(`http://${hostname}:${port}/createuser`, {
         method: 'POST',
@@ -152,27 +124,25 @@ function App() {
         body: JSON.stringify(payload),
       });
       if (!response.ok) {
-        // Log and throw an error if the response is not OK
-        const errorText = await response.text(); // Read the error response as plain text
+        const errorText = await response.text();
         throw new Error(`Server error: ${response.status} - ${errorText}`);
       }
-    
-      const data = await response.json(); // Parse the response
+
+      const data = await response.json();
       console.log('User created successfully:', data);
     } catch (error) {
-        console.error(error);
+      console.error(error);
     }
   }
 
-  async function createStaticUser({username}) {
+  async function createStaticUser({ username }) {
     let startTime = Date.now();
-  
+
     const payload = {
       username,
       startTime,
     };
-  
-    console.log("payload: ", payload);
+
     try {
       const response = await fetch(`http://${hostname}:${port}/createStaticUser`, {
         method: 'POST',
@@ -181,15 +151,50 @@ function App() {
       });
       console.log("client creating static user " + payload.username);
       if (!response.ok) {
-        // Log and throw an error if the response is not OK
-        const errorText = await response.text(); // Read the error response as plain text
+        const errorText = await response.text();
         throw new Error(`Server error: ${response.status} - ${errorText}`);
       }
-    
-      const data = await response.json(); // Parse the response
+
+      const data = await response.json();
       console.log('client successfully static created user: ', data);
     } catch (error) {
-        console.error(error);
+      console.error(error);
+    }
+  }
+
+  async function fetchLiveLeaderboard() {
+    try {
+      const response = await fetch(`http://${hostname}:${port}/leaderboard/live`);
+      const data = await response.json();
+      console.log(data);
+      return data;
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }
+
+  async function fetchStaticLeaderboard() {
+    try {
+      const response = await fetch(`http://${hostname}:${port}/leaderboard/static`);
+      const data = await response.json();
+      console.log(data);
+      return data;
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }
+
+  async function fetchWinners() {
+    try {
+      const response = await fetch(`http://${hostname}:${port}/leaderboard/winners`);
+      const data = await response.json();
+      console.log(data);
+      return data;
+    } catch (error) {
+      console.error(error);
+      return [];
     }
   }
 
@@ -215,9 +220,9 @@ function App() {
 
       {currentScreen === 'Leaderboards' && (
         <>
-          <LeaderboardUI name="High Score" id="scoresLB" />
-          <LeaderboardUI name="Fastest 2048" id="timesLB" />
-          <LeaderboardUI name="2048 Winners" id="winnersLB" />
+          <LeaderboardUI name="High Score" id="scoresLB" fetchData={fetchStaticLeaderboard} />
+          <LeaderboardUI name="Fastest 2048" id="timesLB" fetchData={fetchStaticLeaderboard} />
+          <LeaderboardUI name="2048 Winners" id="winnersLB" fetchData={fetchWinners}/>
           <ButtonUI id="Back" onClick={goBack}>Back to Menu</ButtonUI>
         </>
       )}
@@ -225,7 +230,7 @@ function App() {
       {currentScreen === 'Multiplayer' && (
         <>
           <BoardUI />
-          <LeaderboardUI name="Live Leaderboard" id="liveLB" />
+          <LeaderboardUI name="Live Leaderboard" id="liveLB" fetchData={fetchLiveLeaderboard} />
           <ButtonUI id="Back" onClick={goBack}>Back to Menu</ButtonUI>
         </>
       )}
@@ -250,8 +255,6 @@ function App() {
           <ButtonUI id="UsernameLabel">{username}</ButtonUI>
         </>
       )}
-
-
     </div>
   );
 }

@@ -110,29 +110,6 @@ function BoardUI() {
     </div>
   );
 
-async function fetchLiveLeaderboard () {
-    await fetch(`http://${hostname}:${port}/leaderboard/live`)
-    .then(response => response.json())
-    .then(data => {
-      console.log(data);
-      return data;
-    })
-      
-    .catch(error => {
-      console.log("meow");
-      console.error(error)}
-    );
-}
-
-
-async function fetchStaticLeaderboard() {
-    await fetch(`http://${hostname}:${port}/leaderboard/static`)
-    .then(response => response.json())
-    .then(data => {
-      console.log(data);
-      return data;
-    })
-}
 
 async function fetchUpdatedBoard () {
   const payload = {
@@ -159,15 +136,6 @@ async function fetchUpdatedBoard () {
   } catch (error) {
       console.error(error);
   }
-}
-
-async function fetchWinners() {
-    await fetch(`http://${hostname}:${port}/leaderboard/winners`)
-    .then(response => response.json())
-    .then(data => {
-      console.log(data);
-      return data;
-    })
 }
 
 async function updateLiveLeaderboard( { 

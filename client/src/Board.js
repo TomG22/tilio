@@ -61,6 +61,7 @@ class Board {
       }
     }
     movedCount += this.moveUp();
+    movedCount += merged.length;
     //console.log("hasMoved" + movedCount);
     if(movedCount > 0) {
       //console.log("Called fill random");
@@ -129,6 +130,7 @@ class Board {
       }
     }
     movedCount += this.moveDown();
+    movedCount += merged.length;
     if(movedCount > 0) {
       //console.log("Called fill random");
       this.fillRandom();
@@ -196,6 +198,7 @@ class Board {
       }
     }
     movedCount += this.moveLeft();
+    movedCount += merged.length;
     //console.log("merge length" + merged.length);
     if(movedCount > 0) {
       //console.log("Called fill random");
@@ -263,6 +266,7 @@ class Board {
       }
     }
     movedCount += this.moveRight();
+    movedCount += merged.length;
     //console.log("merge length" + merged.length);
     if(movedCount > 0) {
       //console.log("Called fill random");
