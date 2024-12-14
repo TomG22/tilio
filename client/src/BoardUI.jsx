@@ -52,27 +52,27 @@ function BoardUI() {
     setScore(board.getScore()); // Update score
     console.log(board.getScore());
     checkAttackTrigger(); // Check if a new attack should be triggered
-    (async () => {
-        username = "eddie";
-        try {
-            await createUser({
-              username: username
-            });
-            await updateLiveLeaderboard({
-                score: 'eddie i like juice 2jisjfoijdsijoigsdoadf',
-                board: board.getTilesData(),
-                startTime: Date.now(),
-                lastMove: Date.now(),
-                endTime: '',
-                winTime: Date.now()
-            });
-            await fetchLiveLeaderboard();
-            await fetchLiveLeaderboard();
-            console.log("OWOOOOOWOWOWOOO");
-        } catch (error) {
-            console.error("Error:", error);
-        }
-    })();
+    // (async () => {
+    //     username = "eddie";
+    //     try {
+    //         await createUser({
+    //           username: username
+    //         });
+    //         await updateLiveLeaderboard({
+    //             score: 'eddie i like juice 2jisjfoijdsijoigsdoadf',
+    //             board: board.getTilesData(),
+    //             startTime: Date.now(),
+    //             lastMove: Date.now(),
+    //             endTime: '',
+    //             winTime: Date.now()
+    //         });
+    //         await fetchLiveLeaderboard();
+    //         await fetchLiveLeaderboard();
+    //         console.log("OWOOOOOWOWOWOOO");
+    //     } catch (error) {
+    //         console.error("Error:", error);
+    //     }
+    // })();
     checkForAttack();
   }
 
@@ -183,27 +183,6 @@ async function fetchWinners() {
     })
 }
 
-(async () => {
-    username = "eddie";
-    try {
-        await createUser({
-          username: username
-        });
-        await updateLiveLeaderboard({
-            score: 'eddie i like juice',
-            board: board.tiles,
-            startTime: Date.now(),
-            lastMove: Date.now(),
-            endTime: '',
-            winTime: Date.now()
-        });
-        await fetchLiveLeaderboard();
-        await fetchLiveLeaderboard();
-        console.log("OWOOOOOWOWOWOOO");
-    } catch (error) {
-        console.error("Error:", error);
-    }
-})();
 async function updateLiveLeaderboard( { 
 score, board, startTime, lastMove, endTime, winTime }) {
   const payload = {
@@ -239,35 +218,9 @@ score, board, startTime, lastMove, endTime, winTime }) {
 
 
 }
-async function createUser({username}) {
-  let startTime = Date.now();
 
-  const payload = {
-    username,
-    startTime
-  };
 
-  try {
-    const response = await fetch('http://localhost:3000/createuser', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    });
-    if (!response.ok) {
-      // Log and throw an error if the response is not OK
-      const errorText = await response.text(); // Read the error response as plain text
-      throw new Error(`Server error: ${response.status} - ${errorText}`);
-    }
-  
-    const data = await response.json(); // Parse the response
-    console.log('User created successfully:', data);
-  } catch (error) {
-      console.error(error);
-  }
+
 }
-}
-
 
 export default BoardUI;
