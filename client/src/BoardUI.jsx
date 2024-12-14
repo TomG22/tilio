@@ -13,11 +13,10 @@ function BoardUI({ username }) {
   const [score, setScore] = useState(0);
 
   const checkForAttack = async () => {
-    console.log("user", {username});
-    const userText = {username};
+    console.log("user" + username);
     try {
       const payload = {
-        userText,
+        username,
       };
       const response = await fetch(`http://${hostname}:${port}/checkAttack`, {
  

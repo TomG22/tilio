@@ -212,7 +212,9 @@ app.post("/leaderboard/live/update", async (req, res) => {
       *
       * game over is denoted by an nonzero endTime
       */
-    if (endTime != '') {
+    console.log("wintime: " + winTime);
+    console.log("entime: " + endTime);
+    if (endTime != undefined) {
       await GameStatic.findOneAndUpdate(
         { username },
         {
@@ -222,7 +224,7 @@ app.post("/leaderboard/live/update", async (req, res) => {
         { new: true, upsert: true }
       );
 
-      if (winTime != '') {
+      if (winTime != undefined) {
         await GameLive.findOneAndUpdate(
           { username },
           {
@@ -255,11 +257,14 @@ app.post("/leaderboard/live/update", async (req, res) => {
 
 // check if the player is under attack
 app.post('/checkAttack', async (req, res) => {
-  const { username } = req.body;
   try {
+    const { username } = req.body;
+    console.log("body check attack " + req.body);
+    console.log(username);
     const player = await GameLive.findOne({ username });
     console.log(username);
     if (!player) {
+      console.log("Check attack player not found");
       return res.status(400).json({ message: 'Player not found'});
     }
     if (player.pendingAttack) {
