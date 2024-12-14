@@ -7,7 +7,8 @@
 :root {
   --pri-color: #8d91d9;
   --sec-color: #5c60ab;
-  --text-color: White;
+  --text-color: #d9f6fc;
+  --text-color-dark: #333;
   --bg-color: #cc7c68;
 }
 
@@ -187,9 +188,7 @@ div, button {
 }
 
 #liveLB {
-  left: 60vh;
-  margin-left: 50vw;
-  transform: translate(-50%, 0%)
+  right: 5vw;
 }
 
 .Score {
@@ -226,65 +225,36 @@ div, button {
   margin-right: 5vw;
 }
 
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-
-@keyframes Tile-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* tutorial */
 .Tutorial {
-  padding: 20px;
+  color: var(--text-color-dark); 
   text-align: center;
-  /* background-color: #f9f9f9;
-  border: 1px solid #ddd; */
   border-radius: 10px;
   width: 60%;
   margin: 20px auto;
   font-family: Arial, sans-serif;
-}
-
-.Tutorial h1 {
-  color: #333;
-  margin-bottom: 10px;
-}
-
-.Tutorial p {
-  color: #555;
-  margin-bottom: 20px;
+  position: absolute;
+  left: 50vw;
+  padding: 2%;
+  transform: translate(-50%, 0%);
 }
 
 .Tutorial ul {
+  background-color: var(--pri-color);
   list-style-type: none;
-  padding: 0;
+  padding: 2%;
 }
 
-.Tutorial ul li {
-  text-align: left;
-  margin: 10px 0;
+.Tutorial strong {
+  color: var(--text-color-dark);
+}
+
+.Tutorial ul li p {
+  text-align: center;
+  margin: 2% 0;
   padding: 5px 10px;
-  color: #333;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  color: var(--text-color);
+}
+
+.Tutorial normal {
+ color: var(--text-color-dark); 
 }
