@@ -8,16 +8,16 @@ const db_port = 27017;
 const port = 3000;
 const hostname = `localhost`;
 
-function BoardUI({ usernameIn }) {
-  const username = usernameIn; 
+function BoardUI({ username }) {
   const [board, setBoard] = useState(new Board());
   const [score, setScore] = useState(0);
 
   const checkForAttack = async () => {
-    console.log(username);
+    console.log("user", {username});
+    const userText = {username};
     try {
       const payload = {
-        username
+        userText,
       };
       const response = await fetch(`http://${hostname}:${port}/checkAttack`, {
  
@@ -62,7 +62,7 @@ function BoardUI({ usernameIn }) {
     }
     setBoard(new Board(board)); // Update state with new board instance
     setScore(board.getScore()); // Update score
-    console.log(board.getScore());
+    console.log("score", board.getScore());
     updateLiveLeaderboard(board.getScore, board.getTiles(), startTime, Date.now(), '', '');
     checkAttackTrigger(); // Check if a new attack should be triggered
     checkForAttack();
