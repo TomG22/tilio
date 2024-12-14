@@ -201,8 +201,8 @@ app.post("/leaderboard/live/update", async (req, res) => {
       *
       * game over is denoted by an nonzero endTime
       */
-    console.log("wintime: " + winTime);
-    console.log("entime: " + endTime);
+    // console.log("wintime: " + winTime);
+    // console.log("entime: " + endTime);
     if (endTime != "") {
       await GameStatic.findOneAndUpdate(
         { username },

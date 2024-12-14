@@ -87,6 +87,12 @@ function App() {
     } else {
       setCurrentScreen('Home');
     }
+
+    if (currentScreen === 'Multiplayer') {
+      updateLiveLeaderboard({
+        endTime: Date.now(),
+      });
+    }
   };
   const showHome = () => setCurrentScreen('Home');
   const showLB = () => setCurrentScreen('Leaderboards');
@@ -99,6 +105,7 @@ function App() {
       showHome();
     }
   };
+
 
   const selectMode = async (mode) => {
     try {
@@ -239,7 +246,7 @@ function App() {
 
       {currentScreen === 'Multiplayer' && (
         <>
-          <BoardUI username={username}/>
+          <BoardUI username={username} mode={"Multiplayer"}/>
           <LeaderboardUI name="Live Leaderboard" id="liveLB" fetchData={fetchLiveLeaderboard} />
           <ButtonUI id="Back" onClick={goBack}>Back to Menu</ButtonUI>
         </>
@@ -247,7 +254,7 @@ function App() {
 
       {currentScreen === 'Practice' && (
         <>
-          <BoardUI username={username}/>
+          <BoardUI username={username} mode={"Practice"}/>
           <ButtonUI id="Back" onClick={goBack}>Back to Menu</ButtonUI>
         </>
       )}
@@ -267,6 +274,40 @@ function App() {
       )}
     </div>
   );
-}
 
+async function updateLiveLeaderboard( { 
+ score, board, startTime, lastMove, endTime, winTime }) {
+   const payload = {
+     username,
+     score,
+     board,
+     startTime,
+     lastMove,
+     endTime,
+     winTime
+   };
+
+   try {
+     const response = await fetch(`http://${hostname}:${port}/leaderboard/live/update`, {
+       method: 'POST',
+       headers: {
+         'Content-Type': 'application/json',
+       },
+       body: JSON.stringify(payload),
+     });
+     if (!response.ok) {
+       // Log and throw an error if the response is not OK
+       const errorText = await response.text(); // Read the error response as plain text
+       throw new Error(`Server error: ${response.status} - ${errorText}`);
+     }
+   
+     const data = await response.json(); // Parse the response
+     console.log('Leaderboard updated successfully:', data);
+     return data; // Return the server's response
+   } catch (error) {
+       console.error(error);
+   }
+ }
+
+}
 export default App;

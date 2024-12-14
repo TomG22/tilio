@@ -305,7 +305,7 @@ class Board {
   /*
   * private helper method used to check if the game was lost
   */
-  #gameLost() {
+  gameLost() {
     if(!this.#isFull()) {
       return false;
     }

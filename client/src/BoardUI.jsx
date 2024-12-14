@@ -9,7 +9,7 @@ const port = 3000;
 const hostname = `localhost`;
 let highestScore = 0;
 
-function BoardUI({ username }) {
+function BoardUI({ username, mode }) {
   const [board, setBoard] = useState(new Board());
   const [score, setScore] = useState(0);
 
@@ -63,6 +63,18 @@ function BoardUI({ username }) {
     setBoard(new Board(board)); // Update state with new board instance
     setScore(board.getScore()); // Update score
     console.log("score", board.getScore());
+    if (board.won) {
+      console.log("winna");
+      alert("you win");
+      return;
+    } 
+    if (board.gameLost()){
+      console.log("LOSER");
+      alert("lol loser");
+      return;
+    }
+    // let scoreString = board.getScore().toString();
+    // const tilesArr = board.getTiles();
     updateLiveLeaderboard({
       score: board.getScore(),
       board: board.getTiles(),
@@ -73,6 +85,11 @@ function BoardUI({ username }) {
     });
     checkAttackTrigger({ score: board.getScore() }); // Check if a new attack should be triggered
     checkForAttack();
+    if (mode === "Multiplayer") {
+      console.log("ATTACKING");
+      checkAttackTrigger(); // Check if a new attack should be triggered
+      checkForAttack();
+    }
   }
 
   function checkAttackTrigger({score}) {
