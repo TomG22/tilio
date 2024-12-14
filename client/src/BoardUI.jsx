@@ -75,7 +75,7 @@ function BoardUI({ username, mode }) {
     // let scoreString = board.getScore().toString();
     // const tilesArr = board.getTiles();
     updateLiveLeaderboard({
-      score: board.getScore().toString(),
+      score: board.getScore(),
       board: board.getTiles(),
       startTime: startTime,    // Make sure `startTime` is defined
       lastMove: Date.now(),

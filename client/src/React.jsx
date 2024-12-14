@@ -26,33 +26,24 @@ function ButtonUI({ children, id, onClick }) {
 }
 
 function LeaderboardUI({ name, id, fetchData }) {
-  const [leaderboardData, setLeaderboardData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [lbData, setLBData] = useState([]);
 
   useEffect(() => {
-    let isMounted = true;
-
-    async function loadLeaderboardData() {
+    async function loadLBData() {
       try {
-        setLoading(true);
         const data = await fetchData();
-        if (isMounted) {
-          setLeaderboardData(Array.isArray(data) ? data : []);
-        }
+        setLBData(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error(`Error fetching leaderboard data: ${error}`);
-      } finally {
-        if (isMounted) setLoading(false);
       }
     }
 
-    // Set up the interval
+    // Fetch the new leaderboard data every second
     const intervalId = setInterval(() => {
-      loadLeaderboardData();
+      loadLBData();
     }, 1000);
 
     return () => {
-      isMounted = false;
       clearInterval(intervalId);
     };
   }, [fetchData]);
@@ -60,17 +51,16 @@ function LeaderboardUI({ name, id, fetchData }) {
   return (
     <div className="Leaderboard" id={id}>
       <h2>{name}</h2>
-      {loading ? (
-        <div>Loading...</div>
-      ) : leaderboardData.length > 0 ? (
-        leaderboardData.map((entry, index) => (
-          console.log(entry),
-          <ScoreUI
-            key={index}
-            username={entry.username || "Unknown"}
-            score={entry.score || "N/A"}
-          />
-        ))
+      {lbData.length > 0 ? (
+        lbData.map((data, index) => {
+          return (
+            <ScoreUI
+              key={index}
+              username={data.username || "Unknown"}
+              score={data.score || "N/A"}
+            />
+          );
+        })
       ) : (
         <div>No data available</div>
       )}
