@@ -35,7 +35,7 @@ const winnersSchema = new mongoose.Schema ({
 
 const gameSchema = new mongoose.Schema({
   username: String,
-  score: String,
+  score: { type: String, default: "0"},
   startTime: Date,
   endTime: Date,
   winTime: Date,
@@ -188,11 +188,11 @@ app.post("/leaderboard/live/update", async (req, res) => {
   try {
     const result = await GameLive.findOneAndUpdate(
       { username },
-      { score},
-      { board },
-      { startTime },
-      { endTime },
-      { winTime },
+      { score,
+       board,
+       startTime,
+       endTime,
+       winTime,},
       { new: true, upsert: false }
     );
 
@@ -203,7 +203,7 @@ app.post("/leaderboard/live/update", async (req, res) => {
       */
     console.log("wintime: " + winTime);
     console.log("entime: " + endTime);
-    if (endTime != undefined) {
+    if (endTime != "") {
       await GameStatic.findOneAndUpdate(
         { username },
         {
@@ -213,7 +213,7 @@ app.post("/leaderboard/live/update", async (req, res) => {
         { new: true, upsert: true }
       );
 
-      if (winTime != undefined) {
+      if (winTime != "") {
         await GameLive.findOneAndUpdate(
           { username },
           {

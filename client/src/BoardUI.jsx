@@ -62,7 +62,16 @@ function BoardUI({ username }) {
     setBoard(new Board(board)); // Update state with new board instance
     setScore(board.getScore()); // Update score
     console.log("score", board.getScore());
-    updateLiveLeaderboard(board.getScore(), board.getTiles(), startTime, Date.now(), '', '');
+    let scoreString = board.getScore().toString();
+    const tilesArr = board.getTiles();
+    updateLiveLeaderboard({
+      score: board.getScore().toString(),
+      board: board.getTiles(),
+      startTime: startTime,    // Make sure `startTime` is defined
+      lastMove: Date.now(),
+      endTime: '',             // Empty string for endTime
+      winTime: ''              // Empty string for winTime
+    });
     checkAttackTrigger(); // Check if a new attack should be triggered
     checkForAttack();
   }
@@ -114,66 +123,66 @@ function BoardUI({ username }) {
   );
 
 
-async function fetchUpdatedBoard () {
-  const payload = {
-    username
-  };
+  async function fetchUpdatedBoard () {
+    const payload = {
+      username
+    };
 
-  try {
-    const response = await fetch(`http://${hostname}:${port}/getBoardUpdate`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    });
-    if (!response.ok) {
-      // Log and throw an error if the response is not OK
-      const errorText = await response.text(); // Read the error response as plain text
-      throw new Error(`Server error: ${response.status} - ${errorText}`);
+    try {
+      const response = await fetch(`http://${hostname}:${port}/getBoardUpdate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+      if (!response.ok) {
+        // Log and throw an error if the response is not OK
+        const errorText = await response.text(); // Read the error response as plain text
+        throw new Error(`Server error: ${response.status} - ${errorText}`);
+      }
+    
+      const data = await response.json(); // Parse the response
+      console.log('Leaderboard updated successfully:', data);
+      return data; // Return the server's response
+    } catch (error) {
+        console.error(error);
     }
-  
-    const data = await response.json(); // Parse the response
-    console.log('Leaderboard updated successfully:', data);
-    return data; // Return the server's response
-  } catch (error) {
-      console.error(error);
   }
-}
 
-async function updateLiveLeaderboard( { 
-score, board, startTime, lastMove, endTime, winTime }) {
-  const payload = {
-    username,
-    score,
-    board,
-    startTime,
-    lastMove,
-    endTime,
-    winTime
-  };
+  async function updateLiveLeaderboard( { 
+  score, board, startTime, lastMove, endTime, winTime }) {
+    const payload = {
+      username,
+      score,
+      board,
+      startTime,
+      lastMove,
+      endTime,
+      winTime
+    };
 
-  try {
-    const response = await fetch(`http://${hostname}:${port}/leaderboard/live/update`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    });
-    if (!response.ok) {
-      // Log and throw an error if the response is not OK
-      const errorText = await response.text(); // Read the error response as plain text
-      throw new Error(`Server error: ${response.status} - ${errorText}`);
+    try {
+      const response = await fetch(`http://${hostname}:${port}/leaderboard/live/update`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+      if (!response.ok) {
+        // Log and throw an error if the response is not OK
+        const errorText = await response.text(); // Read the error response as plain text
+        throw new Error(`Server error: ${response.status} - ${errorText}`);
+      }
+    
+      const data = await response.json(); // Parse the response
+      console.log('Leaderboard updated successfully:', data);
+      return data; // Return the server's response
+    } catch (error) {
+        console.error(error);
     }
-  
-    const data = await response.json(); // Parse the response
-    console.log('Leaderboard updated successfully:', data);
-    return data; // Return the server's response
-  } catch (error) {
-      console.error(error);
   }
-}
 }
 
 export default BoardUI;
