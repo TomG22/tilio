@@ -273,28 +273,36 @@ app.post('/checkAttack', async (req, res) => {
 
 // attempt to send an attack
 app.post('/attack', async (req, res) => {
-  const { username, score } = req.body;
+  const { username } = req.body;
 
-  // console.log("Received attack request:", { username, score }); // Log input
+  if (!username) {
+    return res.status(400).json({ message: 'Username is required' });
+  }
 
   try {
-    const leaderboard = await GameLive.find().sort({ score: -1 });
-    console.log("Leaderboard:", leaderboard); // Log leaderboard
-    const attackerIndex = leaderboard.findIndex(player => player.username === username);
-    console.log("Attacker Index:", attackerIndex); // Log attacker index
+    const currentDoc = await GameLive.findOne({ username });
 
-
-    if (attackerIndex === - 1 || attackerIndex === 0) {
-      return res.status(400).json({ message: 'Cannot attack; no valid target above you.'});
+    if (!currentDoc) {
+      return res.status(404).json({ message: 'Document not found' });
     }
-    const target = leaderboard[attackerIndex - 1];
+
+    console.log(`Current user's score: ${currentDoc.score}`);
+    // Find the document with the next higher score
+    const target = await GameLive.findOne({ score: { $gt: currentDoc.score } })
+      .sort({ score: 1 }) // Sort by score in ascending order
+      .exec();
+
+    if (!target) {
+      return res.status(404).json({ message: 'No suitable target found' });
+    }
+
     target.pendingAttack = true;
     await target.save();
 
     return res.status(200).json({ message: 'Attack sent to next user' });
   } catch (error) {
-    console.error("Error initiating attack: " + error);
-    res.status(500).json({ message: 'MEOW'});
+    console.error("Error initiating attack:", error);
+    res.status(500).json({ message: 'An error occurred while processing the attack' });
   }
 });
 

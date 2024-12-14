@@ -7,6 +7,7 @@ const startTime = Date.now();
 const db_port = 27017;
 const port = 3000;
 const hostname = `localhost`;
+let highestScore = 0;
 
 function BoardUI({ username }) {
   const [board, setBoard] = useState(new Board());
@@ -62,8 +63,6 @@ function BoardUI({ username }) {
     setBoard(new Board(board)); // Update state with new board instance
     setScore(board.getScore()); // Update score
     console.log("score", board.getScore());
-    let scoreString = board.getScore().toString();
-    const tilesArr = board.getTiles();
     updateLiveLeaderboard({
       score: board.getScore(),
       board: board.getTiles(),
@@ -72,22 +71,26 @@ function BoardUI({ username }) {
       endTime: '',             // Empty string for endTime
       winTime: ''              // Empty string for winTime
     });
-    checkAttackTrigger(); // Check if a new attack should be triggered
+    checkAttackTrigger({ score: board.getScore() }); // Check if a new attack should be triggered
     checkForAttack();
   }
 
-  const checkAttackTrigger = () => {
-    if (score >= 2000 && (Math.log2(score / 2000) % 1 === 0)) {
+  function checkAttackTrigger({score}) {
+    let result = (setMostSig({score}) % 2000) === 0;
+    console.log("Most siggy: " + setMostSig({score}))
+    if(result && score > highestScore) {
       sendAttack();
+      highestScore = score;
     }
   };
 
   const sendAttack = async () => {
+    console.log("Sending attack.");
     try {
       const response = await fetch(`http://${hostname}:${port}/attack`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ score }),
+        body: JSON.stringify({ username }),
       });
       if (!response.ok) throw new Error('Error sending attack');
       console.log('Attack sent!');
@@ -182,6 +185,18 @@ function BoardUI({ username }) {
     } catch (error) {
         console.error(error);
     }
+  }
+  function setMostSig(num) {
+      if (num === 0) return 0;
+
+      const isNegative = num < 0;
+      num = Math.abs(num);
+
+      const magnitude = Math.floor(Math.log10(num)); // Find the magnitude of the number
+      const mostSignificantDigit = Math.floor(num / Math.pow(10, magnitude)); // Extract the most significant digit
+      const result = mostSignificantDigit * Math.pow(10, magnitude); // Reconstruct the number with only the most significant digit
+
+      return result; // Restore the sign if the number was negative
   }
 }
 
