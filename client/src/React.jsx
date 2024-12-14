@@ -27,23 +27,34 @@ function ButtonUI({ children, id, onClick }) {
 
 function LeaderboardUI({ name, id, fetchData }) {
   const [leaderboardData, setLeaderboardData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let isMounted = true; // Prevents state updates on unmounted components
     async function loadLeaderboardData() {
       try {
-        const data = await fetchData(); // Fetch data using the provided fetch function
-        setLeaderboardData(data);
+        setLoading(true);
+        const data = await fetchData();
+        if (isMounted) {
+          setLeaderboardData(Array.isArray(data) ? data : []); // Ensure data is an array
+        }
       } catch (error) {
         console.error(`Error fetching leaderboard data: ${error}`);
+      } finally {
+        if (isMounted) setLoading(false);
       }
     }
     loadLeaderboardData();
+
+    return () => { isMounted = false; }; // Cleanup to prevent memory leaks
   }, [fetchData]);
 
   return (
     <div className="Leaderboard" id={id}>
       <h2>{name}</h2>
-      {leaderboardData.length > 0 ? (
+      {loading ? (
+        <div>Loading...</div>
+      ) : leaderboardData.length > 0 ? (
         leaderboardData.map((entry, index) => (
           <ScoreUI
             key={index}
@@ -52,7 +63,7 @@ function LeaderboardUI({ name, id, fetchData }) {
           />
         ))
       ) : (
-        <div>Loading...</div>
+        <div>No data available</div>
       )}
     </div>
   );
@@ -222,7 +233,7 @@ function App() {
         <>
           <LeaderboardUI name="High Score" id="scoresLB" fetchData={fetchStaticLeaderboard} />
           <LeaderboardUI name="Fastest 2048" id="timesLB" fetchData={fetchStaticLeaderboard} />
-          <LeaderboardUI name="2048 Winners" id="winnersLB" fetchData={fetchWinners}/>
+          <LeaderboardUI name="2048 Winners" id="winnersLB" fetchData={fetchWinners} />
           <ButtonUI id="Back" onClick={goBack}>Back to Menu</ButtonUI>
         </>
       )}
