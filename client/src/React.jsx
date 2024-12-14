@@ -30,13 +30,14 @@ function LeaderboardUI({ name, id, fetchData }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let isMounted = true; // Prevents state updates on unmounted components
+    let isMounted = true;
+
     async function loadLeaderboardData() {
       try {
         setLoading(true);
         const data = await fetchData();
         if (isMounted) {
-          setLeaderboardData(Array.isArray(data) ? data : []); // Ensure data is an array
+          setLeaderboardData(Array.isArray(data) ? data : []);
         }
       } catch (error) {
         console.error(`Error fetching leaderboard data: ${error}`);
@@ -44,9 +45,16 @@ function LeaderboardUI({ name, id, fetchData }) {
         if (isMounted) setLoading(false);
       }
     }
-    loadLeaderboardData();
 
-    return () => { isMounted = false; }; // Cleanup to prevent memory leaks
+    // Set up the interval
+    const intervalId = setInterval(() => {
+      loadLeaderboardData();
+    }, 1000);
+
+    return () => {
+      isMounted = false;
+      clearInterval(intervalId);
+    };
   }, [fetchData]);
 
   return (
@@ -56,6 +64,7 @@ function LeaderboardUI({ name, id, fetchData }) {
         <div>Loading...</div>
       ) : leaderboardData.length > 0 ? (
         leaderboardData.map((entry, index) => (
+          console.log(entry),
           <ScoreUI
             key={index}
             username={entry.username || "Unknown"}
