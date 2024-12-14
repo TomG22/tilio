@@ -62,8 +62,18 @@ function BoardUI({ username, mode }) {
     setBoard(new Board(board)); // Update state with new board instance
     setScore(board.getScore()); // Update score
     console.log("score", board.getScore());
-    let scoreString = board.getScore().toString();
-    const tilesArr = board.getTiles();
+    if (board.won) {
+      console.log("winna");
+      alert("you win");
+      return;
+    } 
+    if (board.gameLost()){
+      console.log("LOSER");
+      alert("lol loser");
+      return;
+    }
+    // let scoreString = board.getScore().toString();
+    // const tilesArr = board.getTiles();
     updateLiveLeaderboard({
       score: board.getScore().toString(),
       board: board.getTiles(),
