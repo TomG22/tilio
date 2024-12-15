@@ -32,8 +32,7 @@ function BoardUI({ username, mode }) {
       console.log('data: ' + resObject.isAttacked);
       if (!response.ok) throw new Error('Error checking attack');
       if (resObject.isAttacked) {
-        board.freezeTile(); // Handle freezing0
-        // setBoard(new Board(board)); // Trigger re-render with updated board state
+        board.freezeTile();
       }
     } catch (error) {
       console.error('Error checking for attack:', error);
@@ -61,39 +60,46 @@ function BoardUI({ username, mode }) {
       default:
         return;
     }
-    setBoard(new Board(board)); // Update state with new board instance
-    setScore(board.getScore()); // Update score
+    setBoard(new Board(board));
+    setScore(board.getScore());
     console.log("score", board.getScore());
     if (board.won) {
+      updateLiveLeaderboard({
+        score: board.getScore(),
+        board: board.getTiles(),
+        startTime: startTime,
+        lastMove: Date.now(),
+        endTime: '',
+        winTime: Date.now()
+      });
       return;
     } 
     if (board.gameLost() && !alreadyLost){
       updateLiveLeaderboard({
         score: board.getScore(),
         board: board.getTiles(),
-        startTime: startTime,    // Make sure `startTime` is defined
+        startTime: startTime,
         lastMove: Date.now(),
-        endTime: Date.now(),             // Empty string for endTime
-        winTime: ''              // Empty string for winTime
+        endTime: Date.now(),
+        winTime: ''
       });
       alreadyLost = true;
       return;
     }
-    // let scoreString = board.getScore().toString();
-    // const tilesArr = board.getTiles();
+
     updateLiveLeaderboard({
       score: board.getScore(),
       board: board.getTiles(),
-      startTime: startTime,    // Make sure `startTime` is defined
+      startTime: startTime,
       lastMove: Date.now(),
-      endTime: '',             // Empty string for endTime
-      winTime: ''              // Empty string for winTime
+      endTime: '',
+      winTime: ''
     });
-    checkAttackTrigger({ score: board.getScore() }); // Check if a new attack should be triggered
+    checkAttackTrigger({ score: board.getScore() });
     checkForAttack();
     if (mode === "Multiplayer") {
       console.log("ATTACKING");
-      checkAttackTrigger({score}); // Check if a new attack should be triggered
+      checkAttackTrigger({score});
       checkForAttack();
     }
   }
@@ -131,7 +137,7 @@ function BoardUI({ username, mode }) {
     };
   }, [board]);
 
-  const tiles = board.getTiles(); // Get tiles from the board instance
+  const tiles = board.getTiles();
   return (
     <div className="Board">
       <div className="BoardScoreLabel">Score: {score}</div> 
