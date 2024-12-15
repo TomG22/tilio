@@ -64,13 +64,12 @@ function BoardUI({ username, mode }) {
     setScore(board.getScore()); // Update score
     console.log("score", board.getScore());
     if (board.won) {
-      console.log("winna");
-      alert("you win");
       return;
     } 
     if (board.gameLost()){
-      console.log("LOSER");
-      alert("lol loser");
+      updateLiveLeaderboard({
+        endTime: Date.now(),
+      });
       return;
     }
     // let scoreString = board.getScore().toString();
@@ -137,6 +136,10 @@ function BoardUI({ username, mode }) {
           />
         ))
       ))}
+      <div>
+        {board.won && !board.gameLost() && <div>You Hit 2048!</div>}
+        {board.gameLost() && <div>You Lost!</div>}
+      </div>
     </div>
   );
 
