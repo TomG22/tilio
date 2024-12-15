@@ -196,6 +196,24 @@ app.post("/leaderboard/live/update", async (req, res) => {
       { new: true, upsert: false }
     );
 
+    if (winTime != "") {
+      await GameLive.findOneAndUpdate(
+        { username },
+        {
+            score,
+            winTime
+        },
+        { new: true, upsert: true }
+      );
+      await GameWinners.findOneAndUpdate(
+        { username },
+        {
+            score,
+            winTime
+        },
+        { new: true, upsert: true }
+      );
+    }
     /*
       * if game is over, update the static leaderboard
       *
@@ -213,16 +231,6 @@ app.post("/leaderboard/live/update", async (req, res) => {
         { new: true, upsert: true }
       );
 
-      if (winTime != "") {
-        await GameLive.findOneAndUpdate(
-          { username },
-          {
-              score,
-              winTime
-          },
-          { new: true, upsert: true }
-        );
-      }
 
       await GameLive.deleteOne({ username });
 
