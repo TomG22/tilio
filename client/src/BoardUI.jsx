@@ -8,6 +8,7 @@ const db_port = 27017;
 const port = 3000;
 const hostname = `localhost`;
 let highestScore = 2000;
+let alreadyLost = false;
 
 function BoardUI({ username, mode }) {
   const [board, setBoard] = useState(new Board());
@@ -66,10 +67,16 @@ function BoardUI({ username, mode }) {
     if (board.won) {
       return;
     } 
-    if (board.gameLost()){
+    if (board.gameLost() && !alreadyLost){
       updateLiveLeaderboard({
-        endTime: Date.now(),
+        score: board.getScore(),
+        board: board.getTiles(),
+        startTime: startTime,    // Make sure `startTime` is defined
+        lastMove: Date.now(),
+        endTime: Date.now(),             // Empty string for endTime
+        winTime: ''              // Empty string for winTime
       });
+      alreadyLost = true;
       return;
     }
     // let scoreString = board.getScore().toString();

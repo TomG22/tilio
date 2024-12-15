@@ -30,7 +30,7 @@ mongoose.connect(`mongodb://${hostname}:${db_port}/mernstack`, {
 
 const winnersSchema = new mongoose.Schema ({
   username: String,
-  score: Number 
+  score: {type: Number, default: 0},
 })
 
 const gameSchema = new mongoose.Schema({
@@ -44,8 +44,8 @@ const gameSchema = new mongoose.Schema({
 
 const gameOverSchema = new mongoose.Schema({
   username: String,
-  score: Number,
-  winTime: Number 
+  score: {type: Number, default: 0},
+  winTime: {type: Date},
 });
 
 const GameLive = mongoose.model('GameLive', gameSchema);
@@ -185,6 +185,8 @@ app.post("/leaderboard/live/update", async (req, res) => {
             winTime
           } = req.body;
 
+  let scoreSaved = score;
+
   try {
     const result = await GameLive.findOneAndUpdate(
       { username },
@@ -201,7 +203,7 @@ app.post("/leaderboard/live/update", async (req, res) => {
         { username },
         {
             score,
-            winTime
+            winTime,
         },
         { new: true, upsert: true }
       );
@@ -209,7 +211,7 @@ app.post("/leaderboard/live/update", async (req, res) => {
         { username },
         {
             score,
-            winTime
+            winTime,
         },
         { new: true, upsert: true }
       );
@@ -221,12 +223,13 @@ app.post("/leaderboard/live/update", async (req, res) => {
       */
     // console.log("wintime: " + winTime);
     // console.log("entime: " + endTime);
+    console.log("endTime: " + endTime);
     if (endTime != "") {
       await GameStatic.findOneAndUpdate(
         { username },
         {
             score,
-            winTime
+            winTime,
         },
         { new: true, upsert: true }
       );
