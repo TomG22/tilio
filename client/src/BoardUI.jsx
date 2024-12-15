@@ -6,7 +6,7 @@ import TileUI from './TileUI';
 const startTime = Date.now();
 const db_port = 27017;
 const port = 3000;
-const hostname = `localhost`;
+const hostname = `143.244.148.164`;
 let highestScore = 2000;
 let alreadyLost = false;
 

@@ -10,7 +10,7 @@ import BoardUI from './BoardUI';
 import React, { useState, useEffect } from 'react';
 import TutorialUI from './TutorialUI';
 
-const hostname = `localhost`;
+const hostname = `143.244.148.164`;
 const port = 3000;
 
 function HeaderUI({ children }) {

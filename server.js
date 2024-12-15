@@ -7,7 +7,7 @@ const { start } = require('repl');
 const app = express();
 const PORT = 3000;
 const db_port = 27017;
-const hostname = 'localhost';
+const hostname = '143.244.148.164';
 
 // Middleware
 app.use(cors());
