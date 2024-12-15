@@ -238,7 +238,6 @@ function App() {
       {currentScreen === 'Leaderboards' && (
         <>
           <LeaderboardUI name="High Score" id="scoresLB" fetchData={fetchStaticLeaderboard} />
-          <LeaderboardUI name="Fastest 2048" id="timesLB" fetchData={fetchStaticLeaderboard} />
           <LeaderboardUI name="2048 Winners" id="winnersLB" fetchData={fetchWinners} />
           <ButtonUI id="Back" onClick={goBack}>Back to Menu</ButtonUI>
         </>
