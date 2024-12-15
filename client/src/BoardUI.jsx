@@ -7,7 +7,7 @@ const startTime = Date.now();
 const db_port = 27017;
 const port = 3000;
 const hostname = `localhost`;
-let highestScore = 0;
+let highestScore = 2000;
 
 function BoardUI({ username, mode }) {
   const [board, setBoard] = useState(new Board());
@@ -87,17 +87,15 @@ function BoardUI({ username, mode }) {
     checkForAttack();
     if (mode === "Multiplayer") {
       console.log("ATTACKING");
-      checkAttackTrigger(); // Check if a new attack should be triggered
+      checkAttackTrigger({score}); // Check if a new attack should be triggered
       checkForAttack();
     }
   }
 
   function checkAttackTrigger({score}) {
-    let result = (setMostSig({score}) % 2000) === 0;
-    console.log("Most siggy: " + setMostSig({score}))
-    if(result && score > highestScore) {
+    if(score > highestScore) {
       sendAttack();
-      highestScore = score;
+      highestScore *= 2;
     }
   };
 
@@ -203,7 +201,7 @@ function BoardUI({ username, mode }) {
         console.error(error);
     }
   }
-  function setMostSig(num) {
+  function setMostSig({num}) {
       if (num === 0) return 0;
 
       const isNegative = num < 0;
