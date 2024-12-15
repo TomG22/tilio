@@ -306,7 +306,7 @@ class Board {
   * private helper method used to check if the game was lost
   */
   gameLost() {
-    if(!this.isFull()) {
+    if(!this.#isFull()) {
       return false;
     }
     for (let row = 0; row < 4; row++) {
@@ -349,7 +349,7 @@ class Board {
   /*
   * isFull is a private helper method to check if the board is full
   */
-  isFull() {
+  #isFull() {
     for (let row = 0; row < 4; row++) {
       for (let col = 0; col < 4; col++) {
         if(this.tiles[row][col].data.value === 0) {
