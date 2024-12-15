@@ -136,9 +136,9 @@ function BoardUI({ username, mode }) {
           />
         ))
       ))}
-      <div>
-        {board.won && !board.gameLost() && <div>You Hit 2048!</div>}
-        {board.gameLost() && <div>You Lost!</div>}
+      <div id="boardStatus">
+        {board.won && !board.gameLost() && <div id="winStatus">You Hit 2048!</div>}
+        {board.gameLost() && <div id="lostStatus">You Lost!</div>}
       </div>
     </div>
   );
